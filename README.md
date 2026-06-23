@@ -6,9 +6,10 @@
 
 ## 直接使用
 
-[打开小说记录](https://yara-n.github.io/novel-tracker-skill/)
+有两种使用方式：
 
-也可以下载 [`assets/novel-tracker.html`](assets/novel-tracker.html)，然后直接用浏览器打开。
+1. **在线使用：**点击 [立即打开小说记录](https://yara-n.github.io/novel-tracker-skill/)，无需下载。
+2. **下载使用：**下载 [`novel-tracker.html`](assets/novel-tracker.html) 文件，再用浏览器打开。
 
 > 更换浏览器、清理浏览器数据或更换文件位置前，请先在页面中导出 JSON 备份。
 

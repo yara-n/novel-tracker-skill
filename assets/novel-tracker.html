@@ -1,0 +1,1927 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小说记录</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6f2;
+      --paper: #fffefe;
+      --paper-2: #f8faf7;
+      --ink: #1f2520;
+      --muted: #66706a;
+      --line: #dce4dc;
+      --line-strong: #c4d0c7;
+      --green: #1f5a4f;
+      --green-soft: #e8f1ec;
+      --berry: #a94b64;
+      --berry-soft: #f8e9ee;
+      --gold: #9c6b15;
+      --gold-soft: #f7edd8;
+      --blue: #315d87;
+      --blue-soft: #e5edf6;
+      --shadow: 0 8px 24px rgba(31, 48, 39, 0.08);
+      --radius: 8px;
+      font-family: "PingFang SC", "Microsoft YaHei", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      touch-action: manipulation;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(244, 246, 242, 0.92) 220px),
+        var(--bg);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+      touch-action: manipulation;
+      font-size: 14px;
+    }
+
+    button {
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      min-height: 38px;
+      padding: 8px 12px;
+      font-weight: 560;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      border-color: var(--green);
+      background: #f4faf6;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .primary {
+      border-color: var(--green);
+      background: var(--green);
+      color: #fff;
+    }
+
+    .primary:hover {
+      background: #1f493d;
+      color: #fff;
+    }
+
+    .danger {
+      border-color: #b86b6b;
+      color: #8b2424;
+    }
+
+    .icon-button {
+      width: 38px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
+      font-size: 17px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 11px;
+      outline: none;
+      min-height: 40px;
+    }
+
+    input:disabled,
+    textarea:disabled,
+    select:disabled,
+    button:disabled {
+      opacity: 0.58;
+      cursor: not-allowed;
+    }
+
+    textarea {
+      min-height: 118px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(40, 92, 77, 0.14);
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 254, 253, 0.9);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #eef5f1;
+      color: var(--green);
+      font-weight: 700;
+      font-size: 20px;
+      flex: 0 0 auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 21px;
+      line-height: 1.2;
+      font-weight: 720;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .theme-select {
+      width: auto;
+      min-width: 116px;
+      background: var(--paper);
+      cursor: pointer;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(460px, 1.15fr) minmax(360px, 0.85fr);
+      gap: 16px;
+      padding: 16px 20px 22px;
+      min-height: 0;
+    }
+
+    .panel {
+      background: rgba(255, 254, 253, 0.97);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .library {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: calc(100vh - 118px);
+    }
+
+    .toolbar {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 12px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.8fr) minmax(130px, 0.8fr) minmax(150px, 1fr);
+      gap: 8px;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: var(--paper-2);
+      white-space: nowrap;
+    }
+
+    .book-list {
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .list-head,
+    .book-row {
+      display: grid;
+      grid-template-columns: minmax(190px, 1.35fr) minmax(126px, 0.74fr) 86px 104px 66px;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 14px;
+    }
+
+    .list-head {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      color: var(--muted);
+      background: #f0f5f1;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .book-row {
+      width: 100%;
+      min-height: 70px;
+      text-align: left;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      padding-block: 10px;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    .book-row:hover,
+    .book-row.active {
+      background: #f8fbf8;
+      border-color: var(--line);
+    }
+
+    .book-row.active {
+      background: #fbf8f4;
+      box-shadow: inset 3px 0 0 #b85b72;
+    }
+
+    .book-main {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .book-title {
+      font-weight: 700;
+      font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .book-meta,
+    .book-note {
+      color: var(--muted);
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      min-height: 23px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 12px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .tag:nth-child(4n + 1) {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .tag:nth-child(4n + 2) {
+      background: var(--berry-soft);
+      color: var(--berry);
+    }
+
+    .tag:nth-child(4n + 3) {
+      background: var(--gold-soft);
+      color: var(--gold);
+    }
+
+    .tag:nth-child(4n + 4) {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .status {
+      display: inline-grid;
+      place-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-想看 { background: #ede8df; color: #5f574b; }
+    .status-在看 { background: var(--green-soft); color: var(--green); }
+    .status-追更 { background: var(--berry-soft); color: var(--berry); }
+    .status-已读完 { background: var(--blue-soft); color: var(--blue); }
+    .status-弃文 { background: #f1e3df; color: #98432c; }
+
+    .rating {
+      color: var(--gold);
+      letter-spacing: 0;
+      font-size: 14px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .rating-number {
+      color: var(--muted);
+      font-size: 12px;
+      min-width: 18px;
+      margin-left: 0;
+    }
+
+    .empty {
+      padding: 28px 18px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .editor {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: calc(100vh - 118px);
+      overflow: hidden;
+    }
+
+    .editor-head {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+    }
+
+    .editor-title-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .editor-title-row h2 {
+      font-size: 17px;
+      line-height: 1.25;
+      font-weight: 720;
+      overflow-wrap: anywhere;
+    }
+
+    .editor-body {
+      overflow: auto;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .date-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .date-chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper-2);
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 6px;
+      color: #2f4d43;
+      font-size: 13px;
+      font-weight: 720;
+    }
+
+    .section-hint {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .enrich-box {
+      border: 1px solid #d4e1d8;
+      border-left: 3px solid var(--green);
+      border-radius: 8px;
+      background: #f8fbf8;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .enrich-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 720;
+    }
+
+    .enrich-note {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .enrich-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .enrich-status {
+      color: var(--muted);
+      font-size: 12px;
+      min-height: 18px;
+    }
+
+    .enrich-status.loading {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .enrich-status.error {
+      color: #8b2424;
+      font-weight: 700;
+    }
+
+    .enrich-status.success {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .enrich-preview {
+      display: none;
+      gap: 8px;
+      border: 1px solid #d4e1d9;
+      border-radius: 8px;
+      background: #fffefd;
+      padding: 10px;
+    }
+
+    .enrich-preview.active {
+      display: grid;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .preview-title {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 720;
+    }
+
+    .preview-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .preview-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .preview-value {
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .source-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .source-list a {
+      color: var(--blue);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .star-control {
+      display: grid;
+      grid-template-columns: repeat(5, 36px);
+      gap: 6px;
+    }
+
+    .star-control button {
+      width: 36px;
+      height: 36px;
+      min-height: 36px;
+      padding: 0;
+      font-size: 18px;
+      color: #b3915d;
+      background: #fff;
+    }
+
+    .star-control button.active {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
+      background: #f7faf7;
+    }
+
+    .save-state {
+      color: var(--muted);
+      font-size: 12px;
+      min-width: 92px;
+    }
+
+    .save-state.pending {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .save-state.confirmed {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .save-flash {
+      box-shadow: 0 0 0 4px rgba(31, 90, 79, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .lookup-actions {
+      padding-top: 4px;
+    }
+
+    .manual-form-block {
+      border: 1px solid #e0e7df;
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      top: 92px;
+      right: 24px;
+      z-index: 50;
+      max-width: min(360px, calc(100vw - 28px));
+      border: 1px solid var(--line-strong);
+      border-left: 4px solid var(--green);
+      border-radius: 8px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      padding: 11px 13px;
+      font-size: 13px;
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .toast.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.error {
+      border-left-color: #8b2424;
+    }
+
+    .hidden-file {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 1120px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .library,
+      .editor {
+        min-height: auto;
+      }
+
+      .editor {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+
+      .top-actions {
+        justify-content: stretch;
+      }
+
+      .top-actions button {
+        flex: 1 1 calc(50% - 8px);
+      }
+
+      .theme-select {
+        flex: 1 1 100%;
+        width: 100%;
+      }
+
+      .layout {
+        padding: 12px;
+      }
+
+      .editor {
+        order: -1;
+      }
+
+      .library {
+        order: 0;
+      }
+
+      .search-row,
+      .enrich-row,
+      .filter-row,
+      .field-grid,
+      .preview-grid,
+      .editor-title-row {
+        grid-template-columns: 1fr;
+      }
+
+      .list-head {
+        display: none;
+      }
+
+      .book-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        align-items: start;
+      }
+
+      .book-row > * {
+        min-width: 0;
+      }
+
+      .book-title,
+      .book-meta,
+      .book-note {
+        white-space: normal;
+      }
+
+      .toast {
+        top: 12px;
+        right: 14px;
+        left: 14px;
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">书</div>
+        <div>
+          <h1>小说记录</h1>
+          <p class="subtitle">私人书架、追更进度、长评和情节备忘</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="primary" id="newBookBtn" type="button">新建记录</button>
+        <button id="exportBtn" type="button">导出备份</button>
+        <button id="importBtn" type="button">导入备份</button>
+        <button id="restoreBtn" type="button">恢复快照</button>
+        <select class="theme-select" id="themeSelect" aria-label="选择主题色" title="选择主题色">
+          <option value="forest">主题：松叶绿</option>
+          <option value="coral">主题：珊瑚粉</option>
+          <option value="sky">主题：晴空蓝</option>
+          <option value="lilac">主题：葡萄紫</option>
+        </select>
+        <input class="hidden-file" id="importFile" type="file" accept="application/json,.json">
+      </div>
+    </header>
+
+    <section class="layout">
+      <section class="panel library" aria-label="小说列表">
+        <div class="toolbar">
+          <div class="search-row">
+            <input id="searchInput" type="search" placeholder="搜索小说名、作者、标签、笔记">
+            <button class="icon-button" id="clearSearchBtn" type="button" title="清空搜索" aria-label="清空搜索">×</button>
+          </div>
+          <div class="filter-row">
+            <select id="statusFilter" aria-label="按状态筛选">
+              <option value="">全部状态</option>
+            </select>
+            <select id="tagFilter" aria-label="按标签筛选">
+              <option value="">全部标签</option>
+            </select>
+            <select id="sortSelect" aria-label="排序">
+              <option value="updated-desc">最近更新</option>
+              <option value="rating-desc">推荐指数最高</option>
+              <option value="title-asc">小说名 A-Z</option>
+              <option value="created-desc">最近创建</option>
+            </select>
+          </div>
+          <div class="stats-row" id="statsRow"></div>
+        </div>
+        <div class="book-list">
+          <div class="list-head" aria-hidden="true">
+            <span>小说</span>
+            <span>标签</span>
+            <span>状态</span>
+            <span>推荐</span>
+            <span>更新</span>
+          </div>
+          <div id="bookRows"></div>
+        </div>
+      </section>
+
+      <section class="panel editor" aria-label="小说详情">
+        <div class="editor-head">
+          <div class="editor-title-row">
+            <h2 id="editorHeading">新建记录</h2>
+            <button class="danger" id="deleteBtn" type="button">删除</button>
+          </div>
+          <p class="subtitle" id="editorMeta">本地自动保存</p>
+          <div class="date-strip" id="dateStrip"></div>
+        </div>
+
+        <form class="editor-body" id="bookForm">
+          <div class="enrich-box">
+            <div class="enrich-heading">
+              <span>辅助整理</span>
+              <span class="enrich-note">草稿先预览，不会自动覆盖你的记录</span>
+            </div>
+            <div class="enrich-row">
+              <label>粘贴资料 / 输入书名
+                <textarea id="lookupField" rows="3" placeholder="粘贴小说介绍、页面文案，或输入书名"></textarea>
+              </label>
+              <div class="footer-actions">
+                <button id="lookupBtn" type="button">整理</button>
+              </div>
+            </div>
+            <div class="enrich-status" id="lookupStatus">本地整理不联网，内容只在当前浏览器中处理。</div>
+            <div class="enrich-preview" id="lookupPreview">
+              <div class="preview-title" id="lookupPreviewTitle">整理草稿</div>
+              <div class="preview-grid" id="lookupPreviewGrid"></div>
+              <div class="source-list" id="lookupSources"></div>
+              <div class="footer-actions lookup-actions">
+                <button id="applyLookupBtn" type="button">应用到空字段</button>
+                <button id="replaceLookupBtn" type="button">覆盖客观字段</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="manual-form-block">
+            <div class="section-title">
+              <span>基本信息</span>
+              <span class="section-hint">只有小说名必填，其余都可留空</span>
+            </div>
+            <div class="field-grid">
+              <label>小说名
+                <input id="titleField" name="title" autocomplete="off" required>
+              </label>
+              <label>作者（选填）
+                <input id="authorField" name="author" autocomplete="off">
+              </label>
+              <label>阅读平台（选填）
+                <input id="platformField" name="platform" autocomplete="off" placeholder="晋江 / 番茄 / 起点 / 微信读书">
+              </label>
+              <label>阅读进度（选填）
+                <input id="progressField" name="progress" autocomplete="off" placeholder="第 38 章 / 已完结 / 等番外">
+              </label>
+              <label>记录日期（选填）
+                <input id="recordedAtField" name="recordedAt" type="date">
+              </label>
+              <label>状态
+                <select id="statusField" name="status"></select>
+              </label>
+              <label>推荐指数（选填）
+                <div class="star-control" id="ratingControl" aria-label="推荐指数"></div>
+              </label>
+              <label class="wide">类型 / 标签（选填）
+                <input id="tagsField" name="tags" autocomplete="off" placeholder="现言、穿越、悬疑、女强、轻松">
+              </label>
+            </div>
+
+            <div class="section-title">
+              <span>主要人物</span>
+              <span class="section-hint">不确定就不填</span>
+            </div>
+            <div class="field-grid">
+              <label>男主（选填）
+                <input id="maleLeadField" name="maleLead" autocomplete="off">
+              </label>
+              <label>女主（选填）
+                <input id="femaleLeadField" name="femaleLead" autocomplete="off">
+              </label>
+            </div>
+
+            <div class="section-title">
+              <span>故事内容</span>
+              <span class="section-hint">原文和自己的概括分开记录</span>
+            </div>
+            <label>原文简介 / 文案（选填）
+              <textarea id="summaryField" name="summary" placeholder="可以粘贴官方简介或作者文案"></textarea>
+            </label>
+            <label>我的故事梗概（选填）
+              <textarea id="plotField" name="plot" placeholder="用自己的话写主线、设定或核心冲突"></textarea>
+            </label>
+
+            <div class="section-title">
+              <span>我的阅读记录</span>
+              <span class="section-hint">想写多少写多少</span>
+            </div>
+            <label>整体感受（选填）
+              <textarea id="feelingField" name="feeling" placeholder="好看在哪里、不喜欢哪里，或当时的心情"></textarea>
+            </label>
+            <label>印象深刻的情节（选填）
+              <textarea id="sceneField" name="scene" placeholder="让你记住的片段、人物或转折"></textarea>
+            </label>
+            <label>一句话推荐 / 避雷（选填）
+              <textarea id="recommendationField" name="recommendation" placeholder="以后再看到这本书时，最想提醒自己的一句话"></textarea>
+            </label>
+          </div>
+        </form>
+
+        <div class="footer">
+          <span class="save-state" id="saveState">已自动保存</span>
+          <div class="footer-actions">
+            <button id="duplicateBtn" type="button">复制一条</button>
+            <button class="primary" id="saveBtn" type="submit" form="bookForm">确认保存</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "offline.novelTracker.v1";
+    const SAFETY_SNAPSHOT_KEY = "offline.novelTracker.safetySnapshot.v1";
+    const LAST_EXPORT_KEY = "offline.novelTracker.lastExportAt.v1";
+    const THEME_KEY = "offline.novelTracker.theme.v1";
+    const STATUSES = ["想看", "在看", "追更", "已读完", "弃文"];
+    const state = {
+      books: [],
+      selectedId: null,
+      query: "",
+      status: "",
+      tag: "",
+      sort: "updated-desc",
+      ratingDraft: 0,
+      lookupDraft: null,
+      saveTimer: null,
+      toastTimer: null,
+      saveButtonTimer: null
+    };
+
+    const el = {
+      newBookBtn: document.getElementById("newBookBtn"),
+      exportBtn: document.getElementById("exportBtn"),
+      importBtn: document.getElementById("importBtn"),
+      restoreBtn: document.getElementById("restoreBtn"),
+      themeSelect: document.getElementById("themeSelect"),
+      importFile: document.getElementById("importFile"),
+      searchInput: document.getElementById("searchInput"),
+      clearSearchBtn: document.getElementById("clearSearchBtn"),
+      statusFilter: document.getElementById("statusFilter"),
+      tagFilter: document.getElementById("tagFilter"),
+      sortSelect: document.getElementById("sortSelect"),
+      statsRow: document.getElementById("statsRow"),
+      bookRows: document.getElementById("bookRows"),
+      editorHeading: document.getElementById("editorHeading"),
+      editorMeta: document.getElementById("editorMeta"),
+      dateStrip: document.getElementById("dateStrip"),
+      deleteBtn: document.getElementById("deleteBtn"),
+      lookupField: document.getElementById("lookupField"),
+      lookupBtn: document.getElementById("lookupBtn"),
+      lookupStatus: document.getElementById("lookupStatus"),
+      lookupPreview: document.getElementById("lookupPreview"),
+      lookupPreviewTitle: document.getElementById("lookupPreviewTitle"),
+      lookupPreviewGrid: document.getElementById("lookupPreviewGrid"),
+      lookupSources: document.getElementById("lookupSources"),
+      applyLookupBtn: document.getElementById("applyLookupBtn"),
+      replaceLookupBtn: document.getElementById("replaceLookupBtn"),
+      bookForm: document.getElementById("bookForm"),
+      titleField: document.getElementById("titleField"),
+      authorField: document.getElementById("authorField"),
+      platformField: document.getElementById("platformField"),
+      progressField: document.getElementById("progressField"),
+      recordedAtField: document.getElementById("recordedAtField"),
+      statusField: document.getElementById("statusField"),
+      tagsField: document.getElementById("tagsField"),
+      maleLeadField: document.getElementById("maleLeadField"),
+      femaleLeadField: document.getElementById("femaleLeadField"),
+      plotField: document.getElementById("plotField"),
+      summaryField: document.getElementById("summaryField"),
+      feelingField: document.getElementById("feelingField"),
+      sceneField: document.getElementById("sceneField"),
+      recommendationField: document.getElementById("recommendationField"),
+      ratingControl: document.getElementById("ratingControl"),
+      duplicateBtn: document.getElementById("duplicateBtn"),
+      saveBtn: document.getElementById("saveBtn"),
+      saveState: document.getElementById("saveState"),
+      toast: document.getElementById("toast")
+    };
+
+    function nowIso() {
+      return new Date().toISOString();
+    }
+
+    function createBook(overrides = {}) {
+      const timestamp = nowIso();
+      return {
+        id: crypto.randomUUID ? crypto.randomUUID() : `book-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        title: "",
+        author: "",
+        platform: "",
+        progress: "",
+        status: "想看",
+        rating: 0,
+        tags: [],
+        maleLead: "",
+        femaleLead: "",
+        summary: "",
+        plot: "",
+        feeling: "",
+        scene: "",
+        recommendation: "",
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        recordedAt: timestamp,
+        ...overrides
+      };
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function parseTags(value) {
+      return String(value || "")
+        .split(/[,，、\n]/)
+        .map((tag) => tag.trim())
+        .filter(Boolean)
+        .filter((tag, index, array) => array.indexOf(tag) === index);
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
+    }
+
+    function fullDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleString("zh-CN", { hour12: false });
+    }
+
+    function shortDateTime(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleString("zh-CN", {
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+    }
+
+    function dateInputValue(value) {
+      const date = value ? new Date(value) : new Date();
+      if (Number.isNaN(date.getTime())) return new Date().toISOString().slice(0, 10);
+      return date.toISOString().slice(0, 10);
+    }
+
+    function isoFromDateInput(value, fallback = nowIso()) {
+      if (!value) return fallback;
+      const date = new Date(`${value}T12:00:00`);
+      if (Number.isNaN(date.getTime())) return fallback;
+      return date.toISOString();
+    }
+
+    function loadBooks() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        state.books = Array.isArray(parsed) ? parsed.map(normalizeBook) : [];
+      } catch (error) {
+        state.books = [];
+      }
+      if (!state.books.length) {
+        state.books = [createBook()];
+        state.selectedId = state.books[0].id;
+        persist();
+      } else {
+        state.selectedId = state.books[0].id;
+      }
+    }
+
+    function normalizeBook(book) {
+      const base = createBook();
+      return {
+        ...base,
+        ...book,
+        tags: Array.isArray(book.tags) ? book.tags : parseTags(book.tags),
+        rating: Math.max(0, Math.min(5, Number(book.rating) || 0)),
+        status: STATUSES.includes(book.status) ? book.status : "想看",
+        recordedAt: book.recordedAt || book.createdAt || base.recordedAt
+      };
+    }
+
+    function setSaveState(message, type = "") {
+      el.saveState.textContent = message;
+      el.saveState.classList.remove("pending", "confirmed");
+      if (type) el.saveState.classList.add(type);
+    }
+
+    function persist() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.books));
+      setSaveState("已自动保存", "confirmed");
+    }
+
+    function captureSafetySnapshot(reason) {
+      try {
+        localStorage.setItem(SAFETY_SNAPSHOT_KEY, JSON.stringify({
+          reason,
+          createdAt: nowIso(),
+          books: state.books
+        }));
+      } catch (error) {
+        console.warn("Safety snapshot failed:", error);
+      }
+    }
+
+    function readSafetySnapshot() {
+      try {
+        const snapshot = JSON.parse(localStorage.getItem(SAFETY_SNAPSHOT_KEY) || "null");
+        if (!snapshot || !Array.isArray(snapshot.books)) return null;
+        return snapshot;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function queueSave() {
+      setSaveState("自动保存中", "pending");
+      clearTimeout(state.saveTimer);
+      state.saveTimer = setTimeout(() => {
+        saveCurrentFromForm(false);
+      }, 420);
+    }
+
+    function selectedBook() {
+      return state.books.find((book) => book.id === state.selectedId) || null;
+    }
+
+    function filteredBooks() {
+      const query = state.query.trim().toLowerCase();
+      return state.books
+        .filter((book) => {
+          const haystack = [
+            book.title,
+            book.author,
+            book.platform,
+            book.progress,
+            book.status,
+            book.tags.join(" "),
+            book.maleLead,
+            book.femaleLead,
+            book.summary,
+            book.plot,
+            book.feeling,
+            book.scene,
+            book.recommendation
+          ].join(" ").toLowerCase();
+          return (!query || haystack.includes(query)) &&
+            (!state.status || book.status === state.status) &&
+            (!state.tag || book.tags.includes(state.tag));
+        })
+        .sort((a, b) => {
+          if (state.sort === "rating-desc") return (b.rating - a.rating) || compareDate(b.updatedAt, a.updatedAt);
+          if (state.sort === "title-asc") return (a.title || "").localeCompare(b.title || "", "zh-CN");
+          if (state.sort === "created-desc") return compareDate(b.createdAt, a.createdAt);
+          return compareDate(b.updatedAt, a.updatedAt);
+        });
+    }
+
+    function compareDate(left, right) {
+      return new Date(left || 0).getTime() - new Date(right || 0).getTime();
+    }
+
+    function renderFilters() {
+      el.statusFilter.innerHTML = '<option value="">全部状态</option>' +
+        STATUSES.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+      el.statusField.innerHTML = STATUSES.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+
+      const allTags = [...new Set(state.books.flatMap((book) => book.tags))].sort((a, b) => a.localeCompare(b, "zh-CN"));
+      el.tagFilter.innerHTML = '<option value="">全部标签</option>' +
+        allTags.map((tag) => `<option value="${escapeHtml(tag)}">${escapeHtml(tag)}</option>`).join("");
+      el.statusFilter.value = state.status;
+      el.tagFilter.value = state.tag;
+    }
+
+    function renderStats(list) {
+      const total = state.books.length;
+      const reading = state.books.filter((book) => book.status === "在看" || book.status === "追更").length;
+      const done = state.books.filter((book) => book.status === "已读完").length;
+      const lastExportAt = localStorage.getItem(LAST_EXPORT_KEY);
+      const snapshot = readSafetySnapshot();
+      el.statsRow.innerHTML = `
+        <span class="pill">总计 ${total} 本</span>
+        <span class="pill">在看/追更 ${reading} 本</span>
+        <span class="pill">已读完 ${done} 本</span>
+        <span class="pill">当前显示 ${list.length} 本</span>
+        <span class="pill">${lastExportAt ? `上次备份 ${escapeHtml(shortDateTime(lastExportAt))}` : "建议定期导出备份"}</span>
+        ${snapshot ? `<span class="pill">快照 ${escapeHtml(shortDateTime(snapshot.createdAt))}</span>` : ""}
+      `;
+    }
+
+    function renderRowContent(book) {
+      const tags = book.tags.slice(0, 4).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+      const moreTags = book.tags.length > 4 ? `<span class="tag">+${book.tags.length - 4}</span>` : "";
+      const leads = [book.maleLead && `男主：${book.maleLead}`, book.femaleLead && `女主：${book.femaleLead}`].filter(Boolean).join(" / ");
+      const note = book.recommendation || book.feeling || book.summary || book.plot || "";
+      return `
+        <span class="book-main">
+          <span class="book-title">${escapeHtml(book.title || "未命名小说")}</span>
+          <span class="book-meta">${escapeHtml([book.author, book.platform, book.progress].filter(Boolean).join(" · ") || leads || "未填写作者/平台")}</span>
+          <span class="book-note">${escapeHtml(note || "还没有写阅读记录")}</span>
+        </span>
+        <span class="tag-cloud">${tags}${moreTags}</span>
+        <span><span class="status status-${escapeHtml(book.status)}">${escapeHtml(book.status)}</span></span>
+        <span class="rating">${renderStars(book.rating)}</span>
+        <span class="book-meta">${escapeHtml(formatDate(book.updatedAt))}</span>
+      `;
+    }
+
+    function renderRow(book) {
+      return `
+        <button class="book-row ${book.id === state.selectedId ? "active" : ""}" type="button" data-id="${escapeHtml(book.id)}">
+          ${renderRowContent(book)}
+        </button>
+      `;
+    }
+
+    function updateSelectedRowInPlace(book) {
+      const row = el.bookRows.querySelector(`.book-row[data-id="${CSS.escape(book.id)}"]`);
+      if (row) row.innerHTML = renderRowContent(book);
+      renderStats(filteredBooks());
+    }
+
+    function renderRows() {
+      const list = filteredBooks();
+      renderStats(list);
+      if (!list.length) {
+        el.bookRows.innerHTML = '<div class="empty">没有匹配记录。</div>';
+        return;
+      }
+
+      el.bookRows.innerHTML = list.map(renderRow).join("");
+    }
+
+    function renderStars(rating) {
+      const count = Math.max(0, Math.min(5, Number(rating) || 0));
+      const rounded = Math.round(count);
+      const stars = "★★★★★".slice(0, rounded) + "☆☆☆☆☆".slice(0, 5 - rounded);
+      const label = count ? `<span class="rating-number">${count % 1 ? count.toFixed(1) : count}</span>` : "";
+      return `${stars}${label}`;
+    }
+
+    function renderRatingControl() {
+      el.ratingControl.innerHTML = [1, 2, 3, 4, 5].map((value) => `
+        <button type="button" class="${value <= state.ratingDraft ? "active" : ""}" data-rating="${value}" aria-label="${value} 星">★</button>
+      `).join("");
+    }
+
+    function showToast(message, type = "info") {
+      el.toast.textContent = message;
+      el.toast.classList.toggle("error", type === "error");
+      el.toast.classList.add("active");
+      clearTimeout(state.toastTimer);
+      state.toastTimer = setTimeout(() => {
+        el.toast.classList.remove("active");
+      }, type === "error" ? 5200 : 3200);
+    }
+
+    function flashSaveButton(message = "已保存 ✓") {
+      el.saveBtn.textContent = message;
+      el.saveBtn.classList.remove("save-flash");
+      void el.saveBtn.offsetWidth;
+      el.saveBtn.classList.add("save-flash");
+      clearTimeout(state.saveButtonTimer);
+      state.saveButtonTimer = setTimeout(() => {
+        el.saveBtn.textContent = "确认保存";
+        el.saveBtn.classList.remove("save-flash");
+      }, 1200);
+    }
+
+    function confirmManualSave() {
+      clearTimeout(state.saveTimer);
+      const changed = saveCurrentFromForm(true);
+      setSaveState(changed ? "已手动保存" : "已确认保存", "confirmed");
+      showToast(changed ? "修改已保存。" : "没有新的修改，内容已经是最新。");
+      flashSaveButton();
+    }
+
+    function setLookupStatus(message, type = "info") {
+      el.lookupStatus.textContent = message;
+      el.lookupStatus.classList.remove("loading", "error", "success");
+      if (type !== "info") el.lookupStatus.classList.add(type);
+    }
+
+    function renderLookupPreview(title = "整理草稿") {
+      const draft = state.lookupDraft;
+      if (!draft) {
+        el.lookupPreview.classList.remove("active");
+        el.lookupPreviewGrid.innerHTML = "";
+        el.lookupSources.innerHTML = "";
+        return;
+      }
+      el.lookupPreviewTitle.textContent = title;
+
+      const items = [
+        ["小说名", draft.title],
+        ["作者", draft.author],
+        ["平台", draft.platform],
+        ["状态", draft.status],
+        ["类型", Array.isArray(draft.tags) ? draft.tags.join("、") : ""],
+        ["男主", draft.maleLead],
+        ["女主", draft.femaleLead],
+        ["简介", draft.summary],
+        ["主线", draft.plot]
+      ].filter(([, value]) => value);
+
+      el.lookupPreviewGrid.innerHTML = items.map(([label, value]) => `
+        <div class="preview-item">
+          <div class="preview-label">${escapeHtml(label)}</div>
+          <div class="preview-value">${escapeHtml(value)}</div>
+        </div>
+      `).join("");
+
+      const sources = Array.isArray(draft.sources) ? draft.sources.slice(0, 4) : [];
+      el.lookupSources.innerHTML = sources.map((source, index) => {
+        const url = typeof source === "string" ? source : source.url;
+        const title = typeof source === "string" ? `来源 ${index + 1}` : (source.title || `来源 ${index + 1}`);
+        if (!url) return "";
+        return `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(title)}</a>`;
+      }).join("");
+
+      el.lookupPreview.classList.add("active");
+    }
+
+    function renderEditor() {
+      const book = selectedBook();
+      const disabled = !book;
+      [...el.bookForm.elements].forEach((field) => {
+        field.disabled = disabled;
+      });
+      el.deleteBtn.disabled = disabled;
+      el.duplicateBtn.disabled = disabled;
+
+      if (!book) {
+        el.editorHeading.textContent = "没有选中记录";
+        el.editorMeta.textContent = "新建一条开始记录";
+        el.dateStrip.innerHTML = "";
+        el.bookForm.reset();
+        state.ratingDraft = 0;
+        renderRatingControl();
+        return;
+      }
+
+      el.editorHeading.textContent = book.title || "未命名小说";
+      el.editorMeta.textContent = `创建：${fullDate(book.createdAt)} · 更新：${fullDate(book.updatedAt)}`;
+      el.dateStrip.innerHTML = `
+        <span class="date-chip">添加：${escapeHtml(formatDate(book.createdAt))}</span>
+        <span class="date-chip">记录：${escapeHtml(formatDate(book.recordedAt))}</span>
+        <span class="date-chip">更新：${escapeHtml(formatDate(book.updatedAt))}</span>
+      `;
+      el.lookupField.value = book.title || "";
+      el.titleField.value = book.title || "";
+      el.authorField.value = book.author || "";
+      el.platformField.value = book.platform || "";
+      el.progressField.value = book.progress || "";
+      el.recordedAtField.value = dateInputValue(book.recordedAt || book.createdAt);
+      el.statusField.value = book.status || "想看";
+      el.tagsField.value = book.tags.join("、");
+      el.maleLeadField.value = book.maleLead || "";
+      el.femaleLeadField.value = book.femaleLead || "";
+      el.summaryField.value = book.summary || "";
+      el.plotField.value = book.plot || "";
+      el.feelingField.value = book.feeling || "";
+      el.sceneField.value = book.scene || "";
+      el.recommendationField.value = book.recommendation || "";
+      state.ratingDraft = book.rating || 0;
+      renderRatingControl();
+      state.lookupDraft = null;
+      renderLookupPreview();
+      setLookupStatus("本地整理不联网，内容只在当前浏览器中处理。");
+    }
+
+    function renderAll() {
+      renderFilters();
+      renderRows();
+      renderEditor();
+    }
+
+    function readFormDraft(book) {
+      return {
+        title: el.titleField.value.trim(),
+        author: el.authorField.value.trim(),
+        platform: el.platformField.value.trim(),
+        progress: el.progressField.value.trim(),
+        recordedAt: isoFromDateInput(el.recordedAtField.value, book.recordedAt || book.createdAt || nowIso()),
+        status: el.statusField.value,
+        rating: state.ratingDraft,
+        tags: parseTags(el.tagsField.value),
+        maleLead: el.maleLeadField.value.trim(),
+        femaleLead: el.femaleLeadField.value.trim(),
+        summary: el.summaryField.value.trim(),
+        plot: el.plotField.value.trim(),
+        feeling: el.feelingField.value.trim(),
+        scene: el.sceneField.value.trim(),
+        recommendation: el.recommendationField.value.trim()
+      };
+    }
+
+    function sameTags(left, right) {
+      const a = Array.isArray(left) ? left : [];
+      const b = Array.isArray(right) ? right : [];
+      return a.length === b.length && a.every((tag, index) => tag === b[index]);
+    }
+
+    function formDraftChanged(book, draft) {
+      return book.title !== draft.title ||
+        book.author !== draft.author ||
+        book.platform !== draft.platform ||
+        book.progress !== draft.progress ||
+        dateInputValue(book.recordedAt) !== dateInputValue(draft.recordedAt) ||
+        book.status !== draft.status ||
+        Number(book.rating || 0) !== Number(draft.rating || 0) ||
+        !sameTags(book.tags, draft.tags) ||
+        book.maleLead !== draft.maleLead ||
+        book.femaleLead !== draft.femaleLead ||
+        book.summary !== draft.summary ||
+        book.plot !== draft.plot ||
+        book.feeling !== draft.feeling ||
+        book.scene !== draft.scene ||
+        book.recommendation !== draft.recommendation;
+    }
+
+    function refreshEditorMeta(book) {
+      el.editorHeading.textContent = book.title || "未命名小说";
+      el.editorMeta.textContent = `创建：${fullDate(book.createdAt)} · 更新：${fullDate(book.updatedAt)}`;
+      el.dateStrip.innerHTML = `
+        <span class="date-chip">添加：${escapeHtml(formatDate(book.createdAt))}</span>
+        <span class="date-chip">记录：${escapeHtml(formatDate(book.recordedAt))}</span>
+        <span class="date-chip">更新：${escapeHtml(formatDate(book.updatedAt))}</span>
+      `;
+    }
+
+    function saveCurrentFromForm(updateView = true) {
+      const book = selectedBook();
+      if (!book) return;
+      const draft = readFormDraft(book);
+      const changed = formDraftChanged(book, draft);
+      if (!changed) {
+        if (updateView) renderAll();
+        return false;
+      }
+      Object.assign(book, draft);
+      book.updatedAt = nowIso();
+      persist();
+      if (updateView) renderAll();
+      else {
+        refreshEditorMeta(book);
+        updateSelectedRowInPlace(book);
+      }
+      return true;
+    }
+
+    function addBook() {
+      saveCurrentFromForm(false);
+      const book = createBook({ status: "在看" });
+      state.books.unshift(book);
+      state.selectedId = book.id;
+      persist();
+      renderAll();
+      el.titleField.focus();
+    }
+
+    function deleteSelected() {
+      const book = selectedBook();
+      if (!book) return;
+      if (!confirm(`删除「${book.title || "未命名小说"}」？`)) return;
+      captureSafetySnapshot("delete");
+      state.books = state.books.filter((item) => item.id !== book.id);
+      state.selectedId = state.books[0] ? state.books[0].id : null;
+      if (!state.books.length) {
+        const blank = createBook();
+        state.books = [blank];
+        state.selectedId = blank.id;
+      }
+      persist();
+      renderAll();
+      setSaveState("已删除，可恢复快照", "confirmed");
+    }
+
+    function duplicateSelected() {
+      saveCurrentFromForm(false);
+      const book = selectedBook();
+      if (!book) return;
+      const { id, ...bookWithoutId } = book;
+      const copy = createBook({
+        ...bookWithoutId,
+        title: `${book.title || "未命名小说"} 副本`,
+        createdAt: nowIso(),
+        updatedAt: nowIso()
+      });
+      state.books.unshift(copy);
+      state.selectedId = copy.id;
+      persist();
+      renderAll();
+    }
+
+    function pickField(text, labels) {
+      const nextLabel = "(?:书名|小说名|作品|标题|作者|作者名|原作者|平台|来源|网站|类型|标签|题材|分类|男主|男主角|男主名|女主|女主角|女主名|主角|简介|文案|内容简介|内容|主线|主线内容|状态|连载状态|进度|章节|字数)";
+      for (const label of labels) {
+        const pattern = new RegExp(`${label}\\s*[:：]\\s*([\\s\\S]+?)(?=\\s+${nextLabel}\\s*[:：]|[\\n；;]|$)`, "i");
+        const match = text.match(pattern);
+        if (match) return match[1].trim();
+      }
+      return "";
+    }
+
+    function pickLongField(text, labels) {
+      for (const label of labels) {
+        const pattern = new RegExp(`${label}\\s*[:：]\\s*([\\s\\S]+?)(?=\\n\\s*(?:作者|类型|标签|男主|女主|主角|简介|文案|内容简介|内容|主线|状态|平台)\\s*[:：]|$)`, "i");
+        const match = text.match(pattern);
+        if (match) return match[1].trim();
+      }
+      return "";
+    }
+
+    function guessTitle(text) {
+      const bracketed = text.match(/《([^》]{1,60})》/);
+      if (bracketed) return bracketed[1].trim();
+      const titleField = pickField(text, ["书名", "小说名", "作品", "标题"]);
+      if (titleField) return titleField.replace(/^《|》$/g, "").trim();
+      const firstLine = text.split(/\n/).map((line) => line.trim()).find(Boolean) || "";
+      if (firstLine.length <= 40 && !firstLine.includes("：") && !firstLine.includes(":")) return firstLine.replace(/^《|》$/g, "").trim();
+      return "";
+    }
+
+    function guessTags(text) {
+      const explicit = pickField(text, ["类型", "标签", "题材", "分类"]);
+      const tags = parseTags(explicit);
+      const candidates = ["现言", "古言", "玄幻", "仙侠", "修真", "穿越", "重生", "快穿", "无限流", "悬疑", "刑侦", "甜文", "虐文", "爽文", "群像", "年代", "校园", "娱乐圈", "先婚后爱", "破镜重圆", "青梅竹马", "女强", "男强", "双强", "文笔好"];
+      for (const candidate of candidates) {
+        if (text.includes(candidate) && !tags.includes(candidate)) tags.push(candidate);
+      }
+      return tags.slice(0, 8);
+    }
+
+    function normalizeLookupDraft(raw) {
+      const status = STATUSES.includes(raw.status) ? raw.status : "";
+      return {
+        title: raw.title || "",
+        author: raw.author || "",
+        platform: raw.platform || "",
+        progress: raw.progress || "",
+        status,
+        tags: Array.isArray(raw.tags) ? raw.tags.filter(Boolean) : parseTags(raw.tags),
+        maleLead: raw.maleLead || "",
+        femaleLead: raw.femaleLead || "",
+        summary: raw.summary || raw.intro || raw.description || raw.plot || "",
+        plot: raw.mainPlot || raw.plotDetail || "",
+        confidence: Number(raw.confidence) || 0,
+        sources: Array.isArray(raw.sources) ? raw.sources : []
+      };
+    }
+
+    function buildLocalDraft(text) {
+      const normalizedText = text.replace(/\r/g, "").trim();
+      const title = guessTitle(normalizedText);
+      const author = pickField(normalizedText, ["作者", "作者名", "原作者"]);
+      const platform = pickField(normalizedText, ["平台", "来源", "网站"]);
+      const progress = pickField(normalizedText, ["进度", "章节", "字数"]);
+      const rawStatus = pickField(normalizedText, ["状态", "连载状态"]);
+      const status = STATUSES.includes(rawStatus) ? rawStatus : "";
+      const maleLead = pickField(normalizedText, ["男主", "男主角", "男主名"]);
+      const femaleLead = pickField(normalizedText, ["女主", "女主角", "女主名"]);
+      const summary = pickLongField(normalizedText, ["简介", "文案", "内容简介", "内容"]) ||
+        normalizedText.split(/\n/).filter((line) => !/[：:]/.test(line)).slice(1, 5).join("\n").trim();
+      const plot = pickLongField(normalizedText, ["主线", "主线内容"]);
+
+      return normalizeLookupDraft({
+        title,
+        author,
+        platform,
+        progress: progress || (rawStatus && !STATUSES.includes(rawStatus) ? rawStatus : ""),
+        status,
+        tags: guessTags(normalizedText),
+        maleLead,
+        femaleLead,
+        summary,
+        plot,
+        confidence: title || author || summary || plot ? 65 : 20,
+        sources: []
+      });
+    }
+
+    function lookupNovel() {
+      const text = el.lookupField.value.trim() || el.titleField.value.trim();
+      if (!text) {
+        setLookupStatus("先输入书名，或粘贴一段小说介绍。", "error");
+        showToast("先输入书名，或粘贴一段小说介绍。", "error");
+        return;
+      }
+
+      saveCurrentFromForm(false);
+      state.lookupDraft = buildLocalDraft(text);
+      renderLookupPreview("本地整理草稿");
+      setLookupStatus("本地整理完成。你可以先看草稿，再决定是否填入表单。", "success");
+      showToast("本地整理完成，草稿已显示。");
+    }
+
+    function applyLookupDraft({ replace = false } = {}) {
+      const draft = state.lookupDraft;
+      if (!draft) return;
+      const applyValue = (field, value) => {
+        if (!value) return;
+        if (replace || !field.value.trim()) field.value = value;
+      };
+
+      applyValue(el.titleField, draft.title);
+      applyValue(el.authorField, draft.author);
+      applyValue(el.platformField, draft.platform);
+      applyValue(el.progressField, draft.progress);
+      if (draft.status && (replace || !el.statusField.value)) el.statusField.value = draft.status;
+      applyValue(el.tagsField, draft.tags.join("、"));
+      applyValue(el.maleLeadField, draft.maleLead);
+      applyValue(el.femaleLeadField, draft.femaleLead);
+      applyValue(el.summaryField, draft.summary);
+      applyValue(el.plotField, draft.plot);
+      saveCurrentFromForm(true);
+      setLookupStatus(replace ? "已覆盖客观字段。" : "已填入空字段。", "success");
+      showToast(replace ? "已覆盖客观字段。" : "已填入空字段。");
+    }
+
+    function exportJson() {
+      saveCurrentFromForm(false);
+      const blob = new Blob([JSON.stringify(state.books, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 10);
+      link.href = url;
+      link.download = `novel-records-${stamp}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      localStorage.setItem(LAST_EXPORT_KEY, nowIso());
+      renderRows();
+    }
+
+    async function importJson(file) {
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        if (!Array.isArray(parsed)) throw new Error("JSON root is not an array");
+        const incoming = parsed.map(normalizeBook);
+        captureSafetySnapshot("import");
+        const byId = new Map(state.books.map((book) => [book.id, book]));
+        incoming.forEach((book) => byId.set(book.id, book));
+        state.books = [...byId.values()].sort((a, b) => compareDate(b.updatedAt, a.updatedAt));
+        state.selectedId = state.books[0] ? state.books[0].id : null;
+        persist();
+        renderAll();
+        alert(`导入完成：${incoming.length} 条记录`);
+      } catch (error) {
+        alert("导入失败，请确认是这个工具导出的 JSON。");
+      } finally {
+        el.importFile.value = "";
+      }
+    }
+
+    function restoreSafetySnapshot() {
+      const snapshot = readSafetySnapshot();
+      if (!snapshot) {
+        alert("还没有可恢复的本地快照。删除或导入前会自动生成快照。");
+        return;
+      }
+      const time = shortDateTime(snapshot.createdAt);
+      if (!confirm(`恢复 ${time} 的本地快照？当前内容会先保存成新的快照。`)) return;
+      captureSafetySnapshot("restore-current");
+      state.books = snapshot.books.map(normalizeBook);
+      state.selectedId = state.books[0] ? state.books[0].id : null;
+      persist();
+      renderAll();
+      setSaveState("已恢复快照", "confirmed");
+    }
+
+    function bindEvents() {
+      el.newBookBtn.addEventListener("click", addBook);
+      el.deleteBtn.addEventListener("click", deleteSelected);
+      el.duplicateBtn.addEventListener("click", duplicateSelected);
+      el.lookupBtn.addEventListener("click", lookupNovel);
+      el.applyLookupBtn.addEventListener("click", () => applyLookupDraft({ replace: false }));
+      el.replaceLookupBtn.addEventListener("click", () => applyLookupDraft({ replace: true }));
+      el.exportBtn.addEventListener("click", exportJson);
+      el.importBtn.addEventListener("click", () => el.importFile.click());
+      el.restoreBtn.addEventListener("click", restoreSafetySnapshot);
+      el.importFile.addEventListener("change", (event) => importJson(event.target.files[0]));
+      el.clearSearchBtn.addEventListener("click", () => {
+        state.query = "";
+        el.searchInput.value = "";
+        renderRows();
+      });
+
+      el.searchInput.addEventListener("input", (event) => {
+        state.query = event.target.value;
+        renderRows();
+      });
+      el.statusFilter.addEventListener("change", (event) => {
+        state.status = event.target.value;
+        renderRows();
+      });
+      el.tagFilter.addEventListener("change", (event) => {
+        state.tag = event.target.value;
+        renderRows();
+      });
+      el.sortSelect.addEventListener("change", (event) => {
+        state.sort = event.target.value;
+        renderRows();
+      });
+      el.themeSelect.addEventListener("change", (event) => {
+        applyTheme(event.target.value);
+        const label = event.target.options[event.target.selectedIndex].text.replace("主题：", "");
+        showToast(`已切换为${label}主题。`);
+      });
+
+      el.bookRows.addEventListener("click", (event) => {
+        const row = event.target.closest(".book-row");
+        if (!row) return;
+        event.preventDefault();
+        if (event.detail > 1 || state.selectedId === row.dataset.id) return;
+        saveCurrentFromForm(false);
+        state.selectedId = row.dataset.id;
+        renderAll();
+      });
+      el.bookRows.addEventListener("dblclick", (event) => {
+        event.preventDefault();
+      });
+      document.addEventListener("dblclick", (event) => {
+        if (!event.target.closest("input, textarea, select")) event.preventDefault();
+      }, { passive: false });
+
+      el.bookForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        confirmManualSave();
+      });
+      el.saveBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        confirmManualSave();
+      });
+      el.bookForm.addEventListener("input", queueSave);
+      el.bookForm.addEventListener("change", queueSave);
+
+      el.ratingControl.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-rating]");
+        if (!button) return;
+        const value = Number(button.dataset.rating);
+        state.ratingDraft = state.ratingDraft === value ? 0 : value;
+        renderRatingControl();
+        queueSave();
+      });
+    }
+
+    function applyTheme(selectedTheme) {
+      let theme = selectedTheme || localStorage.getItem(THEME_KEY) || "forest";
+      const themes = {
+        "forest": "",
+        "coral": `
+          :root { --bg:#fff7f5; --paper:#fffefe; --paper-2:#fff8f7; --ink:#25252b; --muted:#6d6a73; --line:#eadfdf; --line-strong:#dbc8ca; --green:#ff6f61; --green-soft:#fff0ed; --berry:#d9467a; --berry-soft:#ffeaf2; --gold:#ff8a5b; --gold-soft:#fff1e9; --blue:#2484a9; --blue-soft:#e7f5fb; --shadow:0 10px 24px rgba(255,111,97,.10); }
+          body { background:linear-gradient(180deg,#fff 0,#fff7f5 260px); }
+          .mark { background:#fff0ed; color:#ff6f61; }
+          .primary { background:#ff6f61; border-color:#ff6f61; }
+          .primary:hover { background:#ef5c50; }
+          .list-head { background:#fff2ef; }
+          .book-row.active { background:#fff5f1; box-shadow:inset 3px 0 0 #ff6f61; }
+          .tag:nth-child(4n+1) { background:#e7f5fb; color:#2484a9; }
+          .tag:nth-child(4n+2) { background:#ffeaf2; color:#d9467a; }
+          .tag:nth-child(4n+3) { background:#fff1e9; color:#e36e42; }
+          .tag:nth-child(4n+4) { background:#edf1ff; color:#536bd6; }
+          .status-已读完 { background:#e7f5fb; color:#2484a9; }
+          .status-想看 { background:#fff1e9; color:#e36e42; }
+          .rating, .star-control button { color:#ff8a5b; }
+          .star-control button.active { background:#fff1e9; border-color:#ff8a5b; color:#ff8a5b; }
+          .enrich-box { background:#fff8f7; border-color:#f1dada; border-left-color:#ff6f61; }
+        `,
+        "sky": `
+          :root { --bg:#f4faff; --paper:#fff; --paper-2:#f7fbff; --ink:#202936; --muted:#657181; --line:#dce7ef; --line-strong:#bfd1df; --green:#247db2; --green-soft:#e5f3fb; --berry:#df5f82; --berry-soft:#fdebf1; --gold:#e3943c; --gold-soft:#fff1df; --blue:#3869c8; --blue-soft:#e9f0ff; --shadow:0 10px 24px rgba(36,125,178,.10); }
+          body { background:linear-gradient(180deg,#fff 0,#f4faff 260px); }
+          .mark { background:#e5f3fb; color:#247db2; }
+          .primary { background:#247db2; border-color:#247db2; }
+          .primary:hover { background:#176b9d; }
+          .list-head { background:#eaf5fb; }
+          .book-row.active { background:#f2f9fd; box-shadow:inset 3px 0 0 #247db2; }
+          .tag:nth-child(4n+1) { background:#e5f3fb; color:#247db2; }
+          .tag:nth-child(4n+2) { background:#fdebf1; color:#c94f70; }
+          .tag:nth-child(4n+3) { background:#fff1df; color:#be7425; }
+          .tag:nth-child(4n+4) { background:#e9f0ff; color:#3869c8; }
+          .status-已读完 { background:#e9f0ff; color:#3869c8; }
+          .status-想看 { background:#fff1df; color:#be7425; }
+          .rating, .star-control button { color:#e3943c; }
+          .star-control button.active { background:#fff1df; border-color:#e3943c; color:#be7425; }
+          .enrich-box { background:#f7fbff; border-color:#d7e7f1; border-left-color:#247db2; }
+        `,
+        "lilac": `
+          :root { --bg:#f8f7ff; --paper:#fff; --paper-2:#faf9ff; --ink:#262633; --muted:#6d6b7a; --line:#e3e0f0; --line-strong:#cbc5e3; --green:#7c5cff; --green-soft:#f0edff; --berry:#ef5da8; --berry-soft:#ffedf7; --gold:#00a7b5; --gold-soft:#e5f9fb; --blue:#1677c5; --blue-soft:#e8f3ff; --shadow:0 10px 24px rgba(124,92,255,.10); }
+          body { background:linear-gradient(180deg,#fff 0,#f8f7ff 260px); }
+          .mark { background:#f0edff; color:#7c5cff; }
+          .primary { background:#7c5cff; border-color:#7c5cff; }
+          .primary:hover { background:#6848ef; }
+          .list-head { background:#f1efff; }
+          .book-row.active { background:#fbf9ff; box-shadow:inset 3px 0 0 #7c5cff; }
+          .tag:nth-child(4n+1) { background:#e5f9fb; color:#008c98; }
+          .tag:nth-child(4n+2) { background:#ffedf7; color:#d9468f; }
+          .tag:nth-child(4n+3) { background:#f0edff; color:#7c5cff; }
+          .tag:nth-child(4n+4) { background:#e8f3ff; color:#1677c5; }
+          .status-已读完 { background:#e8f3ff; color:#1677c5; }
+          .status-想看 { background:#f0edff; color:#7c5cff; }
+          .rating, .star-control button { color:#ef5da8; }
+          .star-control button.active { background:#ffedf7; border-color:#ef5da8; color:#ef5da8; }
+          .enrich-box { background:#fbfaff; border-color:#e3e0f0; border-left-color:#7c5cff; }
+        `
+      };
+      if (!(theme in themes)) theme = "forest";
+      let style = document.getElementById("activeThemeStyles");
+      if (!style) {
+        style = document.createElement("style");
+        style.id = "activeThemeStyles";
+        document.head.appendChild(style);
+      }
+      style.textContent = themes[theme];
+      el.themeSelect.value = theme;
+      localStorage.setItem(THEME_KEY, theme);
+    }
+
+    loadBooks();
+    applyTheme();
+    bindEvents();
+    renderAll();
+  </script>
+</body>
+</html>

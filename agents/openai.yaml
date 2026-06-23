@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说记录"
+  short_description: "Offline Chinese novel tracker installer and updater"
+  default_prompt: "Use $novel-tracker to install or update the offline novel tracker in my workspace."

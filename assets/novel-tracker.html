@@ -70,7 +70,7 @@
 
     button:hover {
       border-color: var(--green);
-      background: #f4faf6;
+      background: var(--paper-2);
     }
 
     button:active {
@@ -84,7 +84,7 @@
     }
 
     .primary:hover {
-      background: #1f493d;
+      background: color-mix(in srgb, var(--green) 86%, #000);
       color: #fff;
     }
 
@@ -132,7 +132,7 @@
     textarea:focus,
     select:focus {
       border-color: var(--green);
-      box-shadow: 0 0 0 3px rgba(40, 92, 77, 0.14);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 22%, transparent);
     }
 
     label {
@@ -177,7 +177,7 @@
       border-radius: 8px;
       display: grid;
       place-items: center;
-      background: #eef5f1;
+      background: var(--green-soft);
       color: var(--green);
       font-weight: 700;
       font-size: 20px;
@@ -213,11 +213,26 @@
 
     .theme-select {
       width: auto;
-      min-width: 116px;
-      border: 2px solid var(--green);
-      background: var(--green);
-      color: #fff;
+      min-width: 124px;
+      border: 1.5px solid var(--green);
+      background: var(--green-soft);
+      color: var(--green);
       font-weight: 700;
+      cursor: pointer;
+    }
+
+    .theme-select:hover {
+      border-color: var(--green);
+      background: var(--green-soft);
+    }
+
+    .style-select {
+      width: auto;
+      min-width: 124px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 600;
       cursor: pointer;
     }
 
@@ -311,7 +326,7 @@
       top: 0;
       z-index: 5;
       color: var(--muted);
-      background: #f0f5f1;
+      background: var(--paper-2);
       border-bottom: 1px solid var(--line);
       font-size: 12px;
       font-weight: 700;
@@ -330,15 +345,14 @@
       user-select: none;
     }
 
-    .book-row:hover,
-    .book-row.active {
-      background: #f8fbf8;
+    .book-row:hover {
+      background: var(--paper-2);
       border-color: var(--line);
     }
 
     .book-row.active {
-      background: #fbf8f4;
-      box-shadow: inset 3px 0 0 #b85b72;
+      background: var(--green-soft);
+      box-shadow: inset 3px 0 0 var(--green);
     }
 
     .book-main {
@@ -381,26 +395,8 @@
       font-size: 12px;
       line-height: 1.2;
       overflow-wrap: anywhere;
-    }
-
-    .tag:nth-child(4n + 1) {
       background: var(--green-soft);
       color: var(--green);
-    }
-
-    .tag:nth-child(4n + 2) {
-      background: var(--berry-soft);
-      color: var(--berry);
-    }
-
-    .tag:nth-child(4n + 3) {
-      background: var(--gold-soft);
-      color: var(--gold);
-    }
-
-    .tag:nth-child(4n + 4) {
-      background: var(--blue-soft);
-      color: var(--blue);
     }
 
     .status {
@@ -414,11 +410,11 @@
       white-space: nowrap;
     }
 
-    .status-想看 { background: #ede8df; color: #5f574b; }
+    .status-想看 { background: var(--paper-2); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
     .status-在看 { background: var(--green-soft); color: var(--green); }
-    .status-追更 { background: var(--berry-soft); color: var(--berry); }
-    .status-已读完 { background: var(--blue-soft); color: var(--blue); }
-    .status-弃文 { background: #f1e3df; color: #98432c; }
+    .status-追更 { background: #f4e6de; color: #a05a40; }
+    .status-已读完 { background: #e7ecf0; color: #4f6a86; }
+    .status-弃文 { background: #ece7e0; color: #80735f; }
 
     .rating {
       color: var(--gold);
@@ -522,7 +518,7 @@
       justify-content: space-between;
       gap: 10px;
       padding-top: 6px;
-      color: #2f4d43;
+      color: var(--green);
       font-size: 13px;
       font-weight: 720;
     }
@@ -539,8 +535,8 @@
       min-height: 36px;
       padding: 0;
       font-size: 18px;
-      color: #b3915d;
-      background: #fff;
+      color: var(--gold);
+      background: var(--paper);
     }
 
     .star-control button.active {
@@ -771,11 +767,20 @@
         <button id="exportBtn" type="button">导出备份</button>
         <button id="importBtn" type="button">导入备份</button>
         <button id="restoreBtn" type="button">撤销删除/导入</button>
+        <select class="style-select" id="styleSelect" aria-label="选择界面风格" title="选择界面风格">
+          <option value="warm">风格：温暖纸感</option>
+          <option value="minimal">风格：现代简约</option>
+          <option value="vivid">风格：鲜明活泼</option>
+        </select>
         <select class="theme-select" id="themeSelect" aria-label="选择主题色" title="选择主题色">
-          <option value="forest">主题：松叶绿</option>
-          <option value="coral">主题：珊瑚粉</option>
-          <option value="sky">主题：晴空蓝</option>
-          <option value="lilac">主题：葡萄紫</option>
+          <option value="forest">主题色：松叶绿</option>
+          <option value="coral">主题色：珊瑚粉</option>
+          <option value="sky">主题色：晴空蓝</option>
+          <option value="lilac">主题色：葡萄紫</option>
+          <option value="rouge">主题色：胭脂红</option>
+          <option value="teal">主题色：黛青</option>
+          <option value="amber">主题色：琥珀橘</option>
+          <option value="clay">主题色：茶棕</option>
         </select>
         <input class="hidden-file" id="importFile" type="file" accept="application/json,.json">
       </div>
@@ -785,7 +790,7 @@
       <section class="panel library" aria-label="小说列表">
         <div class="toolbar">
           <div class="search-row">
-            <input id="searchInput" type="search" placeholder="搜索小说名、作者、标签、笔记">
+            <input id="searchInput" type="text" placeholder="搜索小说名、作者、标签、笔记">
             <button class="icon-button" id="clearSearchBtn" type="button" title="清空搜索" aria-label="清空搜索">×</button>
           </div>
           <div class="filter-row">
@@ -881,9 +886,6 @@
             <label>印象深刻的情节
               <textarea id="sceneField" name="scene"></textarea>
             </label>
-            <label>一句话推荐 / 避雷
-              <textarea id="recommendationField" name="recommendation"></textarea>
-            </label>
           </div>
         </form>
 
@@ -905,6 +907,7 @@
     const SAFETY_SNAPSHOT_KEY = "offline.novelTracker.safetySnapshot.v1";
     const LAST_EXPORT_KEY = "offline.novelTracker.lastExportAt.v1";
     const THEME_KEY = "offline.novelTracker.theme.v1";
+    const STYLE_KEY = "offline.novelTracker.style.v1";
     const STATUSES = ["想看", "在看", "追更", "已读完", "弃文"];
     const state = {
       books: [],
@@ -925,6 +928,7 @@
       importBtn: document.getElementById("importBtn"),
       restoreBtn: document.getElementById("restoreBtn"),
       themeSelect: document.getElementById("themeSelect"),
+      styleSelect: document.getElementById("styleSelect"),
       mainLayout: document.getElementById("mainLayout"),
       importFile: document.getElementById("importFile"),
       searchInput: document.getElementById("searchInput"),
@@ -953,7 +957,6 @@
       plotField: document.getElementById("plotField"),
       feelingField: document.getElementById("feelingField"),
       sceneField: document.getElementById("sceneField"),
-      recommendationField: document.getElementById("recommendationField"),
       ratingControl: document.getElementById("ratingControl"),
       duplicateBtn: document.getElementById("duplicateBtn"),
       saveBtn: document.getElementById("saveBtn"),
@@ -978,14 +981,12 @@
         tags: [],
         maleLead: "",
         femaleLead: "",
-        summary: "",
         plot: "",
         feeling: "",
         scene: "",
-        recommendation: "",
         createdAt: timestamp,
         updatedAt: timestamp,
-        recordedAt: timestamp,
+        recordedAt: "",
         finishedAt: "",
         ...overrides
       };
@@ -1035,17 +1036,21 @@
       });
     }
 
+    function toLocalDateString(date) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    }
+
     function dateInputValue(value) {
       const date = value ? new Date(value) : new Date();
-      if (Number.isNaN(date.getTime())) return new Date().toISOString().slice(0, 10);
-      return date.toISOString().slice(0, 10);
+      if (Number.isNaN(date.getTime())) return toLocalDateString(new Date());
+      return toLocalDateString(date);
     }
 
     function optionalDateInputValue(value) {
       if (!value) return "";
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return "";
-      return date.toISOString().slice(0, 10);
+      return toLocalDateString(date);
     }
 
     function isoFromDateInput(value, fallback = nowIso()) {
@@ -1070,15 +1075,15 @@
       const storyParts = [book.plot, book.summary]
         .map((value) => String(value || "").trim())
         .filter((value, index, array) => value && array.indexOf(value) === index);
+      const { summary, ...rest } = book;
       return {
         ...base,
-        ...book,
+        ...rest,
         tags: Array.isArray(book.tags) ? book.tags : parseTags(book.tags),
         rating: Math.max(0, Math.min(5, Number(book.rating) || 0)),
         status: STATUSES.includes(book.status) ? book.status : "想看",
-        recordedAt: book.recordedAt || book.createdAt || base.recordedAt,
+        recordedAt: book.recordedAt || "",
         finishedAt: book.finishedAt || "",
-        summary: "",
         plot: storyParts.join("\n\n")
       };
     }
@@ -1141,7 +1146,6 @@
             book.tags.join(" "),
             book.maleLead,
             book.femaleLead,
-            book.summary,
             book.plot,
             book.feeling,
             book.scene,
@@ -1193,7 +1197,7 @@
       const tags = book.tags.slice(0, 4).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
       const moreTags = book.tags.length > 4 ? `<span class="tag">+${book.tags.length - 4}</span>` : "";
       const leads = [book.maleLead && `男主：${book.maleLead}`, book.femaleLead && `女主：${book.femaleLead}`].filter(Boolean).join(" / ");
-      const note = book.recommendation || book.feeling || book.summary || book.plot || "";
+      const note = book.feeling || book.scene || book.plot || "";
       return `
         <span class="book-main">
           <span class="book-title">${escapeHtml(book.title || "未命名小说")}</span>
@@ -1300,7 +1304,7 @@
       el.editorHeading.textContent = book.title || "未命名小说";
       el.editorMeta.textContent = `创建：${fullDate(book.createdAt)} · 更新：${fullDate(book.updatedAt)}`;
       el.dateStrip.innerHTML = `
-        <span class="date-chip">开始阅读：${escapeHtml(formatDate(book.recordedAt))}</span>
+        ${book.recordedAt ? `<span class="date-chip">开始阅读：${escapeHtml(formatDate(book.recordedAt))}</span>` : ""}
         ${book.finishedAt ? `<span class="date-chip">读完：${escapeHtml(formatDate(book.finishedAt))}</span>` : ""}
         <span class="date-chip">修改：${escapeHtml(formatDate(book.updatedAt))}</span>
       `;
@@ -1308,7 +1312,7 @@
       el.authorField.value = book.author || "";
       el.platformField.value = book.platform || "";
       el.progressField.value = book.progress || "";
-      el.recordedAtField.value = dateInputValue(book.recordedAt || book.createdAt);
+      el.recordedAtField.value = optionalDateInputValue(book.recordedAt);
       el.finishedAtField.value = optionalDateInputValue(book.finishedAt);
       el.statusField.value = book.status || "想看";
       el.tagsField.value = book.tags.join("、");
@@ -1317,7 +1321,6 @@
       el.plotField.value = book.plot || "";
       el.feelingField.value = book.feeling || "";
       el.sceneField.value = book.scene || "";
-      el.recommendationField.value = book.recommendation || "";
       state.ratingDraft = book.rating || 0;
       renderRatingControl();
     }
@@ -1327,6 +1330,17 @@
       renderFilters();
       renderRows();
       renderEditor();
+    }
+
+    function scrollEditorIntoViewOnMobile() {
+      if (!window.matchMedia("(max-width: 1120px)").matches) return;
+      const editor = document.querySelector(".editor");
+      if (editor) editor.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function flushPendingSave() {
+      clearTimeout(state.saveTimer);
+      saveCurrentFromForm(false);
     }
 
     function closeDetails() {
@@ -1341,7 +1355,7 @@
         author: el.authorField.value.trim(),
         platform: el.platformField.value.trim(),
         progress: el.progressField.value.trim(),
-        recordedAt: isoFromDateInput(el.recordedAtField.value, book.recordedAt || book.createdAt || nowIso()),
+        recordedAt: el.recordedAtField.value ? isoFromDateInput(el.recordedAtField.value, book.recordedAt || nowIso()) : "",
         finishedAt: el.finishedAtField.value ? isoFromDateInput(el.finishedAtField.value, "") : "",
         status: el.statusField.value,
         rating: state.ratingDraft,
@@ -1350,8 +1364,7 @@
         femaleLead: el.femaleLeadField.value.trim(),
         plot: el.plotField.value.trim(),
         feeling: el.feelingField.value.trim(),
-        scene: el.sceneField.value.trim(),
-        recommendation: el.recommendationField.value.trim()
+        scene: el.sceneField.value.trim()
       };
     }
 
@@ -1375,15 +1388,14 @@
         book.femaleLead !== draft.femaleLead ||
         book.plot !== draft.plot ||
         book.feeling !== draft.feeling ||
-        book.scene !== draft.scene ||
-        book.recommendation !== draft.recommendation;
+        book.scene !== draft.scene;
     }
 
     function refreshEditorMeta(book) {
       el.editorHeading.textContent = book.title || "未命名小说";
       el.editorMeta.textContent = `创建：${fullDate(book.createdAt)} · 更新：${fullDate(book.updatedAt)}`;
       el.dateStrip.innerHTML = `
-        <span class="date-chip">开始阅读：${escapeHtml(formatDate(book.recordedAt))}</span>
+        ${book.recordedAt ? `<span class="date-chip">开始阅读：${escapeHtml(formatDate(book.recordedAt))}</span>` : ""}
         ${book.finishedAt ? `<span class="date-chip">读完：${escapeHtml(formatDate(book.finishedAt))}</span>` : ""}
         <span class="date-chip">修改：${escapeHtml(formatDate(book.updatedAt))}</span>
       `;
@@ -1411,11 +1423,12 @@
 
     function addBook() {
       saveCurrentFromForm(false);
-      const book = createBook({ status: "在看" });
+      const book = createBook({ status: "在看", recordedAt: nowIso() });
       state.books.unshift(book);
       state.selectedId = book.id;
       persist();
       renderAll();
+      scrollEditorIntoViewOnMobile();
       el.titleField.focus();
     }
 
@@ -1515,6 +1528,7 @@
         state.query = "";
         el.searchInput.value = "";
         renderRows();
+        el.searchInput.focus();
       });
 
       el.searchInput.addEventListener("input", (event) => {
@@ -1535,8 +1549,13 @@
       });
       el.themeSelect.addEventListener("change", (event) => {
         applyTheme(event.target.value);
-        const label = event.target.options[event.target.selectedIndex].text.replace("主题：", "");
-        showToast(`已切换为${label}主题。`);
+        const label = event.target.options[event.target.selectedIndex].text.replace("主题色：", "");
+        showToast(`已切换主题色：${label}。`);
+      });
+      el.styleSelect.addEventListener("change", (event) => {
+        applyStyle(event.target.value);
+        const label = event.target.options[event.target.selectedIndex].text.replace("风格：", "");
+        showToast(`已切换风格：${label}。`);
       });
 
       el.bookRows.addEventListener("click", (event) => {
@@ -1547,6 +1566,7 @@
         saveCurrentFromForm(false);
         state.selectedId = row.dataset.id;
         renderAll();
+        scrollEditorIntoViewOnMobile();
       });
       el.bookRows.addEventListener("dblclick", (event) => {
         event.preventDefault();
@@ -1574,78 +1594,133 @@
         renderRatingControl();
         queueSave();
       });
+
+      el.statusField.addEventListener("change", () => {
+        if (el.statusField.value === "已读完" && !el.finishedAtField.value) {
+          el.finishedAtField.value = dateInputValue();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
+          if (!selectedBook()) return;
+          event.preventDefault();
+          confirmManualSave();
+        }
+      });
+
+      window.addEventListener("pagehide", flushPendingSave);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") flushPendingSave();
+      });
+    }
+
+    // 主题色：只设置配色变量（强调色 + 标签/状态色），不碰底色、字体、圆角（那些由「风格」控制）
+    // 配色跟随「风格」调明度/饱和：纸感低饱和雅致，简约取中，活泼鲜亮
+    const PALETTES = {
+      warm: {
+        forest: "--green:#42685a; --green-soft:#e7eee9;",
+        coral:  "--green:#bf6f63; --green-soft:#f5e7e2;",
+        sky:    "--green:#4f7390; --green-soft:#e7edf2;",
+        lilac:  "--green:#79688c; --green-soft:#ece7f1;",
+        rouge:  "--green:#a4505d; --green-soft:#f2e2e4;",
+        teal:   "--green:#3f7570; --green-soft:#e3ecea;",
+        amber:  "--green:#a9762f; --green-soft:#f4ebd9;",
+        clay:   "--green:#8a6450; --green-soft:#efe6de;"
+      },
+      minimal: {
+        forest: "--green:#2f7d5e; --green-soft:#e6f1ec;",
+        coral:  "--green:#e2685c; --green-soft:#fbe7e3;",
+        sky:    "--green:#3a7ca5; --green-soft:#e7eef4;",
+        lilac:  "--green:#8265c0; --green-soft:#ece7f3;",
+        rouge:  "--green:#c0455a; --green-soft:#f6e1e5;",
+        teal:   "--green:#2f8079; --green-soft:#e2eeec;",
+        amber:  "--green:#c2861f; --green-soft:#f6ecd6;",
+        clay:   "--green:#a06848; --green-soft:#f1e5dc;"
+      },
+      vivid: {
+        forest: "--green:#1f9d6b; --green-soft:#ddf5ea;",
+        coral:  "--green:#ff6f5e; --green-soft:#ffe7e2;",
+        sky:    "--green:#2196d4; --green-soft:#e0f2fc;",
+        lilac:  "--green:#9b6dff; --green-soft:#efe8ff;",
+        rouge:  "--green:#e23b56; --green-soft:#fce1e5;",
+        teal:   "--green:#12a89c; --green-soft:#d8f3f0;",
+        amber:  "--green:#e8920f; --green-soft:#fdeecf;",
+        clay:   "--green:#c47a4f; --green-soft:#f8e7da;"
+      }
+    };
+
+    // 风格：控制底色、文字色、线条、圆角、字体、密度、阴影
+    const STYLES = {
+      "warm": `
+        :root { --bg:#f6f0e6; --paper:#fffdf8; --paper-2:#f7f1e6; --ink:#3a322a; --muted:#8a7d6c; --line:#ead9c4; --line-strong:#ddc8aa; --shadow:0 10px 28px rgba(120,90,50,.10); }
+        body { background:linear-gradient(180deg,#fffdf8 0,#f6f0e6 280px); }
+        h1, .editor-title-row h2, .book-title { font-family:Georgia,"Songti SC","STSong",serif; }
+        button, input, textarea, select, .panel, .pill, .manual-form-block, .toast, .icon-button { border-radius:14px; }
+        .mark { border-radius:50%; }
+        .book-row { min-height:78px; border-radius:0; }
+        .star-control button { border-radius:12px; }
+      `,
+      "minimal": `
+        :root { --bg:#fbfbfc; --paper:#ffffff; --paper-2:#f6f7f9; --ink:#1a1d21; --muted:#7c828c; --line:#ebedf0; --line-strong:#dde0e4; --shadow:0 1px 2px rgba(20,25,35,.05),0 4px 12px rgba(20,25,35,.04); }
+        body { background:#fbfbfc; }
+        button, input, textarea, select, .panel, .manual-form-block, .toast, .icon-button, .star-control button { border-radius:7px; }
+        .book-row { min-height:62px; }
+        .status, .tag { font-weight:600; }
+        .editor { border-left-width:3px; }
+      `,
+      "vivid": `
+        :root { --bg:#f3f6ff; --paper:#ffffff; --paper-2:#f1f5ff; --ink:#1e2330; --muted:#6b7488; --line:#e2e8f5; --line-strong:#cdd6ec; --shadow:0 10px 26px rgba(60,80,180,.14); }
+        body { background:linear-gradient(180deg,#fff 0,#f3f6ff 300px); }
+        button, input, textarea, select, .panel, .pill, .manual-form-block, .toast, .icon-button, .star-control button { border-radius:12px; }
+        .book-row { min-height:72px; }
+        .status, .tag { font-weight:700; }
+      `
+    };
+
+    function ensureStyleTag(id) {
+      let tag = document.getElementById(id);
+      if (!tag) {
+        tag = document.createElement("style");
+        tag.id = id;
+        document.head.appendChild(tag);
+      }
+      return tag;
+    }
+
+    function currentStyle() {
+      const s = localStorage.getItem(STYLE_KEY) || "warm";
+      return s in STYLES ? s : "warm";
+    }
+
+    function currentColor() {
+      const c = localStorage.getItem(THEME_KEY) || "forest";
+      return c in PALETTES.warm ? c : "forest";
+    }
+
+    function applyAppearance() {
+      const s = currentStyle();
+      const c = currentColor();
+      ensureStyleTag("activeStyleStyles").textContent = STYLES[s];
+      ensureStyleTag("activeThemeStyles").textContent = `:root { ${PALETTES[s][c]} }`;
+      el.styleSelect.value = s;
+      el.themeSelect.value = c;
+    }
+
+    function applyStyle(selectedStyle) {
+      const s = selectedStyle && selectedStyle in STYLES ? selectedStyle : currentStyle();
+      localStorage.setItem(STYLE_KEY, s);
+      applyAppearance();
     }
 
     function applyTheme(selectedTheme) {
-      let theme = selectedTheme || localStorage.getItem(THEME_KEY) || "forest";
-      const themes = {
-        "forest": "",
-        "coral": `
-          :root { --bg:#fff7f5; --paper:#fffefe; --paper-2:#fff8f7; --ink:#25252b; --muted:#6d6a73; --line:#eadfdf; --line-strong:#dbc8ca; --green:#ff6f61; --green-soft:#fff0ed; --berry:#d9467a; --berry-soft:#ffeaf2; --gold:#ff8a5b; --gold-soft:#fff1e9; --blue:#2484a9; --blue-soft:#e7f5fb; --shadow:0 10px 24px rgba(255,111,97,.10); }
-          body { background:linear-gradient(180deg,#fff 0,#fff7f5 260px); }
-          .mark { background:#fff0ed; color:#ff6f61; }
-          .primary { background:#ff6f61; border-color:#ff6f61; }
-          .primary:hover { background:#ef5c50; }
-          .list-head { background:#fff2ef; }
-          .book-row.active { background:#fff5f1; box-shadow:inset 3px 0 0 #ff6f61; }
-          .tag:nth-child(4n+1) { background:#e7f5fb; color:#2484a9; }
-          .tag:nth-child(4n+2) { background:#ffeaf2; color:#d9467a; }
-          .tag:nth-child(4n+3) { background:#fff1e9; color:#e36e42; }
-          .tag:nth-child(4n+4) { background:#edf1ff; color:#536bd6; }
-          .status-已读完 { background:#e7f5fb; color:#2484a9; }
-          .status-想看 { background:#fff1e9; color:#e36e42; }
-          .rating, .star-control button { color:#ff8a5b; }
-          .star-control button.active { background:#fff1e9; border-color:#ff8a5b; color:#ff8a5b; }
-        `,
-        "sky": `
-          :root { --bg:#f4faff; --paper:#fff; --paper-2:#f7fbff; --ink:#202936; --muted:#657181; --line:#dce7ef; --line-strong:#bfd1df; --green:#247db2; --green-soft:#e5f3fb; --berry:#df5f82; --berry-soft:#fdebf1; --gold:#e3943c; --gold-soft:#fff1df; --blue:#3869c8; --blue-soft:#e9f0ff; --shadow:0 10px 24px rgba(36,125,178,.10); }
-          body { background:linear-gradient(180deg,#fff 0,#f4faff 260px); }
-          .mark { background:#e5f3fb; color:#247db2; }
-          .primary { background:#247db2; border-color:#247db2; }
-          .primary:hover { background:#176b9d; }
-          .list-head { background:#eaf5fb; }
-          .book-row.active { background:#f2f9fd; box-shadow:inset 3px 0 0 #247db2; }
-          .tag:nth-child(4n+1) { background:#e5f3fb; color:#247db2; }
-          .tag:nth-child(4n+2) { background:#fdebf1; color:#c94f70; }
-          .tag:nth-child(4n+3) { background:#fff1df; color:#be7425; }
-          .tag:nth-child(4n+4) { background:#e9f0ff; color:#3869c8; }
-          .status-已读完 { background:#e9f0ff; color:#3869c8; }
-          .status-想看 { background:#fff1df; color:#be7425; }
-          .rating, .star-control button { color:#e3943c; }
-          .star-control button.active { background:#fff1df; border-color:#e3943c; color:#be7425; }
-        `,
-        "lilac": `
-          :root { --bg:#f8f7ff; --paper:#fff; --paper-2:#faf9ff; --ink:#262633; --muted:#6d6b7a; --line:#e3e0f0; --line-strong:#cbc5e3; --green:#7c5cff; --green-soft:#f0edff; --berry:#ef5da8; --berry-soft:#ffedf7; --gold:#00a7b5; --gold-soft:#e5f9fb; --blue:#1677c5; --blue-soft:#e8f3ff; --shadow:0 10px 24px rgba(124,92,255,.10); }
-          body { background:linear-gradient(180deg,#fff 0,#f8f7ff 260px); }
-          .mark { background:#f0edff; color:#7c5cff; }
-          .primary { background:#7c5cff; border-color:#7c5cff; }
-          .primary:hover { background:#6848ef; }
-          .list-head { background:#f1efff; }
-          .book-row.active { background:#fbf9ff; box-shadow:inset 3px 0 0 #7c5cff; }
-          .tag:nth-child(4n+1) { background:#e5f9fb; color:#008c98; }
-          .tag:nth-child(4n+2) { background:#ffedf7; color:#d9468f; }
-          .tag:nth-child(4n+3) { background:#f0edff; color:#7c5cff; }
-          .tag:nth-child(4n+4) { background:#e8f3ff; color:#1677c5; }
-          .status-已读完 { background:#e8f3ff; color:#1677c5; }
-          .status-想看 { background:#f0edff; color:#7c5cff; }
-          .rating, .star-control button { color:#ef5da8; }
-          .star-control button.active { background:#ffedf7; border-color:#ef5da8; color:#ef5da8; }
-        `
-      };
-      if (!(theme in themes)) theme = "forest";
-      let style = document.getElementById("activeThemeStyles");
-      if (!style) {
-        style = document.createElement("style");
-        style.id = "activeThemeStyles";
-        document.head.appendChild(style);
-      }
-      style.textContent = themes[theme];
-      el.themeSelect.value = theme;
-      localStorage.setItem(THEME_KEY, theme);
+      const c = selectedTheme && selectedTheme in PALETTES.warm ? selectedTheme : currentColor();
+      localStorage.setItem(THEME_KEY, c);
+      applyAppearance();
     }
 
     loadBooks();
-    applyTheme();
+    applyAppearance();
     bindEvents();
     renderAll();
   </script>

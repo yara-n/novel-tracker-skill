@@ -26,6 +26,7 @@ The script backs up an existing target before replacing it. Open the resulting H
   - `offline.novelTracker.safetySnapshot.v1`
   - `offline.novelTracker.lastExportAt.v1`
   - `offline.novelTracker.theme.v1`
+  - `offline.novelTracker.style.v1`
 - Recommend JSON export before moving the HTML to a different path, changing browsers, clearing browser data, or applying a major migration.
 - Never place a user's exported JSON, localStorage contents, notes, or reading history inside this Skill.
 

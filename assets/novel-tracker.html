@@ -226,6 +226,14 @@
       min-height: 0;
     }
 
+    .layout:not(.detail-open) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .layout:not(.detail-open) .editor {
+      display: none;
+    }
+
     .panel {
       background: rgba(255, 254, 253, 0.97);
       border: 1px solid var(--line);
@@ -447,7 +455,7 @@
 
     .editor-title-row {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto auto;
       gap: 10px;
       align-items: center;
     }
@@ -726,7 +734,7 @@
       </div>
     </header>
 
-    <section class="layout">
+    <section class="layout" id="mainLayout">
       <section class="panel library" aria-label="小说列表">
         <div class="toolbar">
           <div class="search-row">
@@ -765,6 +773,7 @@
         <div class="editor-head">
           <div class="editor-title-row">
             <h2 id="editorHeading">新建记录</h2>
+            <button class="icon-button" id="closeDetailBtn" type="button" title="关闭详情" aria-label="关闭详情">×</button>
             <button class="danger" id="deleteBtn" type="button">删除</button>
           </div>
           <p class="subtitle" id="editorMeta">本地自动保存</p>
@@ -881,6 +890,7 @@
       importBtn: document.getElementById("importBtn"),
       restoreBtn: document.getElementById("restoreBtn"),
       themeSelect: document.getElementById("themeSelect"),
+      mainLayout: document.getElementById("mainLayout"),
       importFile: document.getElementById("importFile"),
       searchInput: document.getElementById("searchInput"),
       clearSearchBtn: document.getElementById("clearSearchBtn"),
@@ -892,6 +902,7 @@
       editorHeading: document.getElementById("editorHeading"),
       editorMeta: document.getElementById("editorMeta"),
       dateStrip: document.getElementById("dateStrip"),
+      closeDetailBtn: document.getElementById("closeDetailBtn"),
       deleteBtn: document.getElementById("deleteBtn"),
       bookForm: document.getElementById("bookForm"),
       titleField: document.getElementById("titleField"),
@@ -1008,13 +1019,7 @@
       } catch (error) {
         state.books = [];
       }
-      if (!state.books.length) {
-        state.books = [createBook()];
-        state.selectedId = state.books[0].id;
-        persist();
-      } else {
-        state.selectedId = state.books[0].id;
-      }
+      state.selectedId = null;
     }
 
     function normalizeBook(book) {
@@ -1173,7 +1178,9 @@
       const list = filteredBooks();
       renderStats(list);
       if (!list.length) {
-        el.bookRows.innerHTML = '<div class="empty">没有匹配记录。</div>';
+        el.bookRows.innerHTML = state.books.length
+          ? '<div class="empty">没有匹配记录。</div>'
+          : '<div class="empty">还没有小说记录。点击“新建记录”开始。</div>';
         return;
       }
 
@@ -1269,9 +1276,16 @@
     }
 
     function renderAll() {
+      el.mainLayout.classList.toggle("detail-open", Boolean(selectedBook()));
       renderFilters();
       renderRows();
       renderEditor();
+    }
+
+    function closeDetails() {
+      saveCurrentFromForm(false);
+      state.selectedId = null;
+      renderAll();
     }
 
     function readFormDraft(book) {
@@ -1364,12 +1378,7 @@
       if (!confirm(`删除「${book.title || "未命名小说"}」？`)) return;
       captureSafetySnapshot("delete");
       state.books = state.books.filter((item) => item.id !== book.id);
-      state.selectedId = state.books[0] ? state.books[0].id : null;
-      if (!state.books.length) {
-        const blank = createBook();
-        state.books = [blank];
-        state.selectedId = blank.id;
-      }
+      state.selectedId = null;
       persist();
       renderAll();
       setSaveState("已删除，可恢复快照", "confirmed");
@@ -1417,7 +1426,7 @@
         const byId = new Map(state.books.map((book) => [book.id, book]));
         incoming.forEach((book) => byId.set(book.id, book));
         state.books = [...byId.values()].sort((a, b) => compareDate(b.updatedAt, a.updatedAt));
-        state.selectedId = state.books[0] ? state.books[0].id : null;
+        state.selectedId = null;
         persist();
         renderAll();
         alert(`导入完成：${incoming.length} 条记录`);
@@ -1438,7 +1447,7 @@
       if (!confirm(`恢复 ${time} 的本地快照？当前内容会先保存成新的快照。`)) return;
       captureSafetySnapshot("restore-current");
       state.books = snapshot.books.map(normalizeBook);
-      state.selectedId = state.books[0] ? state.books[0].id : null;
+      state.selectedId = null;
       persist();
       renderAll();
       setSaveState("已恢复快照", "confirmed");
@@ -1446,6 +1455,7 @@
 
     function bindEvents() {
       el.newBookBtn.addEventListener("click", addBook);
+      el.closeDetailBtn.addEventListener("click", closeDetails);
       el.deleteBtn.addEventListener("click", deleteSelected);
       el.duplicateBtn.addEventListener("click", duplicateSelected);
       el.exportBtn.addEventListener("click", exportJson);

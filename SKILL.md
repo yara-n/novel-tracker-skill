@@ -33,7 +33,6 @@ The script backs up an existing target before replacing it. Open the resulting H
 
 - Do not add AI features, API keys, analytics, remote fonts, CDNs, external images, network requests, or cloud sync.
 - Keep all normal operation inside the HTML and browser localStorage.
-- Treat local text organization as deterministic parsing of user-pasted text, not factual lookup.
 - Leave the bundled asset empty of personal records.
 
 ## Customize

@@ -512,117 +512,6 @@
       font-weight: 400;
     }
 
-    .enrich-box {
-      border: 1px solid #d4e1d8;
-      border-left: 3px solid var(--green);
-      border-radius: 8px;
-      background: #f8fbf8;
-      padding: 12px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .enrich-heading {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--green);
-      font-size: 13px;
-      font-weight: 720;
-    }
-
-    .enrich-note {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 400;
-    }
-
-    .enrich-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: end;
-    }
-
-    .enrich-status {
-      color: var(--muted);
-      font-size: 12px;
-      min-height: 18px;
-    }
-
-    .enrich-status.loading {
-      color: var(--blue);
-      font-weight: 700;
-    }
-
-    .enrich-status.error {
-      color: #8b2424;
-      font-weight: 700;
-    }
-
-    .enrich-status.success {
-      color: var(--green);
-      font-weight: 700;
-    }
-
-    .enrich-preview {
-      display: none;
-      gap: 8px;
-      border: 1px solid #d4e1d9;
-      border-radius: 8px;
-      background: #fffefd;
-      padding: 10px;
-    }
-
-    .enrich-preview.active {
-      display: grid;
-    }
-
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .preview-title {
-      color: var(--green);
-      font-size: 13px;
-      font-weight: 720;
-    }
-
-    .preview-item {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--paper);
-      padding: 8px;
-      min-width: 0;
-    }
-
-    .preview-label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-
-    .preview-value {
-      font-size: 13px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    .source-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .source-list a {
-      color: var(--blue);
-      font-size: 12px;
-      overflow-wrap: anywhere;
-    }
-
     .star-control {
       display: grid;
       grid-template-columns: repeat(5, 36px);
@@ -681,10 +570,6 @@
       gap: 8px;
       flex-wrap: wrap;
       justify-content: flex-end;
-    }
-
-    .lookup-actions {
-      padding-top: 4px;
     }
 
     .manual-form-block {
@@ -781,10 +666,8 @@
       }
 
       .search-row,
-      .enrich-row,
       .filter-row,
       .field-grid,
-      .preview-grid,
       .editor-title-row {
         grid-template-columns: 1fr;
       }
@@ -889,31 +772,6 @@
         </div>
 
         <form class="editor-body" id="bookForm">
-          <div class="enrich-box">
-            <div class="enrich-heading">
-              <span>辅助整理</span>
-              <span class="enrich-note">草稿先预览，不会自动覆盖你的记录</span>
-            </div>
-            <div class="enrich-row">
-              <label>粘贴资料 / 输入书名
-                <textarea id="lookupField" rows="3" placeholder="粘贴小说介绍、页面文案，或输入书名"></textarea>
-              </label>
-              <div class="footer-actions">
-                <button id="lookupBtn" type="button">整理</button>
-              </div>
-            </div>
-            <div class="enrich-status" id="lookupStatus">本地整理不联网，内容只在当前浏览器中处理。</div>
-            <div class="enrich-preview" id="lookupPreview">
-              <div class="preview-title" id="lookupPreviewTitle">整理草稿</div>
-              <div class="preview-grid" id="lookupPreviewGrid"></div>
-              <div class="source-list" id="lookupSources"></div>
-              <div class="footer-actions lookup-actions">
-                <button id="applyLookupBtn" type="button">应用到空字段</button>
-                <button id="replaceLookupBtn" type="button">覆盖客观字段</button>
-              </div>
-            </div>
-          </div>
-
           <div class="manual-form-block">
             <div class="section-title">
               <span>基本信息</span>
@@ -1012,7 +870,6 @@
       tag: "",
       sort: "updated-desc",
       ratingDraft: 0,
-      lookupDraft: null,
       saveTimer: null,
       toastTimer: null,
       saveButtonTimer: null
@@ -1036,15 +893,6 @@
       editorMeta: document.getElementById("editorMeta"),
       dateStrip: document.getElementById("dateStrip"),
       deleteBtn: document.getElementById("deleteBtn"),
-      lookupField: document.getElementById("lookupField"),
-      lookupBtn: document.getElementById("lookupBtn"),
-      lookupStatus: document.getElementById("lookupStatus"),
-      lookupPreview: document.getElementById("lookupPreview"),
-      lookupPreviewTitle: document.getElementById("lookupPreviewTitle"),
-      lookupPreviewGrid: document.getElementById("lookupPreviewGrid"),
-      lookupSources: document.getElementById("lookupSources"),
-      applyLookupBtn: document.getElementById("applyLookupBtn"),
-      replaceLookupBtn: document.getElementById("replaceLookupBtn"),
       bookForm: document.getElementById("bookForm"),
       titleField: document.getElementById("titleField"),
       authorField: document.getElementById("authorField"),
@@ -1376,52 +1224,6 @@
       flashSaveButton();
     }
 
-    function setLookupStatus(message, type = "info") {
-      el.lookupStatus.textContent = message;
-      el.lookupStatus.classList.remove("loading", "error", "success");
-      if (type !== "info") el.lookupStatus.classList.add(type);
-    }
-
-    function renderLookupPreview(title = "整理草稿") {
-      const draft = state.lookupDraft;
-      if (!draft) {
-        el.lookupPreview.classList.remove("active");
-        el.lookupPreviewGrid.innerHTML = "";
-        el.lookupSources.innerHTML = "";
-        return;
-      }
-      el.lookupPreviewTitle.textContent = title;
-
-      const items = [
-        ["小说名", draft.title],
-        ["作者", draft.author],
-        ["平台", draft.platform],
-        ["状态", draft.status],
-        ["类型", Array.isArray(draft.tags) ? draft.tags.join("、") : ""],
-        ["男主", draft.maleLead],
-        ["女主", draft.femaleLead],
-        ["简介", draft.summary],
-        ["主线", draft.plot]
-      ].filter(([, value]) => value);
-
-      el.lookupPreviewGrid.innerHTML = items.map(([label, value]) => `
-        <div class="preview-item">
-          <div class="preview-label">${escapeHtml(label)}</div>
-          <div class="preview-value">${escapeHtml(value)}</div>
-        </div>
-      `).join("");
-
-      const sources = Array.isArray(draft.sources) ? draft.sources.slice(0, 4) : [];
-      el.lookupSources.innerHTML = sources.map((source, index) => {
-        const url = typeof source === "string" ? source : source.url;
-        const title = typeof source === "string" ? `来源 ${index + 1}` : (source.title || `来源 ${index + 1}`);
-        if (!url) return "";
-        return `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(title)}</a>`;
-      }).join("");
-
-      el.lookupPreview.classList.add("active");
-    }
-
     function renderEditor() {
       const book = selectedBook();
       const disabled = !book;
@@ -1448,7 +1250,6 @@
         <span class="date-chip">记录：${escapeHtml(formatDate(book.recordedAt))}</span>
         <span class="date-chip">更新：${escapeHtml(formatDate(book.updatedAt))}</span>
       `;
-      el.lookupField.value = book.title || "";
       el.titleField.value = book.title || "";
       el.authorField.value = book.author || "";
       el.platformField.value = book.platform || "";
@@ -1465,9 +1266,6 @@
       el.recommendationField.value = book.recommendation || "";
       state.ratingDraft = book.rating || 0;
       renderRatingControl();
-      state.lookupDraft = null;
-      renderLookupPreview();
-      setLookupStatus("本地整理不联网，内容只在当前浏览器中处理。");
     }
 
     function renderAll() {
@@ -1594,131 +1392,6 @@
       renderAll();
     }
 
-    function pickField(text, labels) {
-      const nextLabel = "(?:书名|小说名|作品|标题|作者|作者名|原作者|平台|来源|网站|类型|标签|题材|分类|男主|男主角|男主名|女主|女主角|女主名|主角|简介|文案|内容简介|内容|主线|主线内容|状态|连载状态|进度|章节|字数)";
-      for (const label of labels) {
-        const pattern = new RegExp(`${label}\\s*[:：]\\s*([\\s\\S]+?)(?=\\s+${nextLabel}\\s*[:：]|[\\n；;]|$)`, "i");
-        const match = text.match(pattern);
-        if (match) return match[1].trim();
-      }
-      return "";
-    }
-
-    function pickLongField(text, labels) {
-      for (const label of labels) {
-        const pattern = new RegExp(`${label}\\s*[:：]\\s*([\\s\\S]+?)(?=\\n\\s*(?:作者|类型|标签|男主|女主|主角|简介|文案|内容简介|内容|主线|状态|平台)\\s*[:：]|$)`, "i");
-        const match = text.match(pattern);
-        if (match) return match[1].trim();
-      }
-      return "";
-    }
-
-    function guessTitle(text) {
-      const bracketed = text.match(/《([^》]{1,60})》/);
-      if (bracketed) return bracketed[1].trim();
-      const titleField = pickField(text, ["书名", "小说名", "作品", "标题"]);
-      if (titleField) return titleField.replace(/^《|》$/g, "").trim();
-      const firstLine = text.split(/\n/).map((line) => line.trim()).find(Boolean) || "";
-      if (firstLine.length <= 40 && !firstLine.includes("：") && !firstLine.includes(":")) return firstLine.replace(/^《|》$/g, "").trim();
-      return "";
-    }
-
-    function guessTags(text) {
-      const explicit = pickField(text, ["类型", "标签", "题材", "分类"]);
-      const tags = parseTags(explicit);
-      const candidates = ["现言", "古言", "玄幻", "仙侠", "修真", "穿越", "重生", "快穿", "无限流", "悬疑", "刑侦", "甜文", "虐文", "爽文", "群像", "年代", "校园", "娱乐圈", "先婚后爱", "破镜重圆", "青梅竹马", "女强", "男强", "双强", "文笔好"];
-      for (const candidate of candidates) {
-        if (text.includes(candidate) && !tags.includes(candidate)) tags.push(candidate);
-      }
-      return tags.slice(0, 8);
-    }
-
-    function normalizeLookupDraft(raw) {
-      const status = STATUSES.includes(raw.status) ? raw.status : "";
-      return {
-        title: raw.title || "",
-        author: raw.author || "",
-        platform: raw.platform || "",
-        progress: raw.progress || "",
-        status,
-        tags: Array.isArray(raw.tags) ? raw.tags.filter(Boolean) : parseTags(raw.tags),
-        maleLead: raw.maleLead || "",
-        femaleLead: raw.femaleLead || "",
-        summary: raw.summary || raw.intro || raw.description || raw.plot || "",
-        plot: raw.mainPlot || raw.plotDetail || "",
-        confidence: Number(raw.confidence) || 0,
-        sources: Array.isArray(raw.sources) ? raw.sources : []
-      };
-    }
-
-    function buildLocalDraft(text) {
-      const normalizedText = text.replace(/\r/g, "").trim();
-      const title = guessTitle(normalizedText);
-      const author = pickField(normalizedText, ["作者", "作者名", "原作者"]);
-      const platform = pickField(normalizedText, ["平台", "来源", "网站"]);
-      const progress = pickField(normalizedText, ["进度", "章节", "字数"]);
-      const rawStatus = pickField(normalizedText, ["状态", "连载状态"]);
-      const status = STATUSES.includes(rawStatus) ? rawStatus : "";
-      const maleLead = pickField(normalizedText, ["男主", "男主角", "男主名"]);
-      const femaleLead = pickField(normalizedText, ["女主", "女主角", "女主名"]);
-      const summary = pickLongField(normalizedText, ["简介", "文案", "内容简介", "内容"]) ||
-        normalizedText.split(/\n/).filter((line) => !/[：:]/.test(line)).slice(1, 5).join("\n").trim();
-      const plot = pickLongField(normalizedText, ["主线", "主线内容"]);
-
-      return normalizeLookupDraft({
-        title,
-        author,
-        platform,
-        progress: progress || (rawStatus && !STATUSES.includes(rawStatus) ? rawStatus : ""),
-        status,
-        tags: guessTags(normalizedText),
-        maleLead,
-        femaleLead,
-        summary,
-        plot,
-        confidence: title || author || summary || plot ? 65 : 20,
-        sources: []
-      });
-    }
-
-    function lookupNovel() {
-      const text = el.lookupField.value.trim() || el.titleField.value.trim();
-      if (!text) {
-        setLookupStatus("先输入书名，或粘贴一段小说介绍。", "error");
-        showToast("先输入书名，或粘贴一段小说介绍。", "error");
-        return;
-      }
-
-      saveCurrentFromForm(false);
-      state.lookupDraft = buildLocalDraft(text);
-      renderLookupPreview("本地整理草稿");
-      setLookupStatus("本地整理完成。你可以先看草稿，再决定是否填入表单。", "success");
-      showToast("本地整理完成，草稿已显示。");
-    }
-
-    function applyLookupDraft({ replace = false } = {}) {
-      const draft = state.lookupDraft;
-      if (!draft) return;
-      const applyValue = (field, value) => {
-        if (!value) return;
-        if (replace || !field.value.trim()) field.value = value;
-      };
-
-      applyValue(el.titleField, draft.title);
-      applyValue(el.authorField, draft.author);
-      applyValue(el.platformField, draft.platform);
-      applyValue(el.progressField, draft.progress);
-      if (draft.status && (replace || !el.statusField.value)) el.statusField.value = draft.status;
-      applyValue(el.tagsField, draft.tags.join("、"));
-      applyValue(el.maleLeadField, draft.maleLead);
-      applyValue(el.femaleLeadField, draft.femaleLead);
-      applyValue(el.summaryField, draft.summary);
-      applyValue(el.plotField, draft.plot);
-      saveCurrentFromForm(true);
-      setLookupStatus(replace ? "已覆盖客观字段。" : "已填入空字段。", "success");
-      showToast(replace ? "已覆盖客观字段。" : "已填入空字段。");
-    }
-
     function exportJson() {
       saveCurrentFromForm(false);
       const blob = new Blob([JSON.stringify(state.books, null, 2)], { type: "application/json" });
@@ -1775,9 +1448,6 @@
       el.newBookBtn.addEventListener("click", addBook);
       el.deleteBtn.addEventListener("click", deleteSelected);
       el.duplicateBtn.addEventListener("click", duplicateSelected);
-      el.lookupBtn.addEventListener("click", lookupNovel);
-      el.applyLookupBtn.addEventListener("click", () => applyLookupDraft({ replace: false }));
-      el.replaceLookupBtn.addEventListener("click", () => applyLookupDraft({ replace: true }));
       el.exportBtn.addEventListener("click", exportJson);
       el.importBtn.addEventListener("click", () => el.importFile.click());
       el.restoreBtn.addEventListener("click", restoreSafetySnapshot);
@@ -1867,7 +1537,6 @@
           .status-想看 { background:#fff1e9; color:#e36e42; }
           .rating, .star-control button { color:#ff8a5b; }
           .star-control button.active { background:#fff1e9; border-color:#ff8a5b; color:#ff8a5b; }
-          .enrich-box { background:#fff8f7; border-color:#f1dada; border-left-color:#ff6f61; }
         `,
         "sky": `
           :root { --bg:#f4faff; --paper:#fff; --paper-2:#f7fbff; --ink:#202936; --muted:#657181; --line:#dce7ef; --line-strong:#bfd1df; --green:#247db2; --green-soft:#e5f3fb; --berry:#df5f82; --berry-soft:#fdebf1; --gold:#e3943c; --gold-soft:#fff1df; --blue:#3869c8; --blue-soft:#e9f0ff; --shadow:0 10px 24px rgba(36,125,178,.10); }
@@ -1885,7 +1554,6 @@
           .status-想看 { background:#fff1df; color:#be7425; }
           .rating, .star-control button { color:#e3943c; }
           .star-control button.active { background:#fff1df; border-color:#e3943c; color:#be7425; }
-          .enrich-box { background:#f7fbff; border-color:#d7e7f1; border-left-color:#247db2; }
         `,
         "lilac": `
           :root { --bg:#f8f7ff; --paper:#fff; --paper-2:#faf9ff; --ink:#262633; --muted:#6d6b7a; --line:#e3e0f0; --line-strong:#cbc5e3; --green:#7c5cff; --green-soft:#f0edff; --berry:#ef5da8; --berry-soft:#ffedf7; --gold:#00a7b5; --gold-soft:#e5f9fb; --blue:#1677c5; --blue-soft:#e8f3ff; --shadow:0 10px 24px rgba(124,92,255,.10); }
@@ -1903,7 +1571,6 @@
           .status-想看 { background:#f0edff; color:#7c5cff; }
           .rating, .star-control button { color:#ef5da8; }
           .star-control button.active { background:#ffedf7; border-color:#ef5da8; color:#ef5da8; }
-          .enrich-box { background:#fbfaff; border-color:#e3e0f0; border-left-color:#7c5cff; }
         `
       };
       if (!(theme in themes)) theme = "forest";

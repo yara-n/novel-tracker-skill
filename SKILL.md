@@ -48,6 +48,14 @@ When updating the reusable asset:
 4. Parse the inline script with Node.
 5. Run `scripts/install_or_update.sh` into a temporary directory and test the installed copy.
 
+For the maintainer's private copy, run:
+
+```bash
+bash scripts/sync_private_copy.sh [private-html]
+```
+
+This generates the private page from the public asset and changes only the five localStorage keys from `offline.*` to `yara.*`.
+
 ## GitHub Updates
 
 Installing this Skill creates a local copy; existing installations do not update automatically.

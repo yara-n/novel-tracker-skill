@@ -214,7 +214,10 @@
     .theme-select {
       width: auto;
       min-width: 116px;
-      background: var(--paper);
+      border: 2px solid var(--green);
+      background: var(--green);
+      color: #fff;
+      font-weight: 700;
       cursor: pointer;
     }
 
@@ -455,7 +458,7 @@
 
     .editor-title-row {
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr auto;
       gap: 10px;
       align-items: center;
     }
@@ -512,12 +515,6 @@
       color: #2f4d43;
       font-size: 13px;
       font-weight: 720;
-    }
-
-    .section-hint {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 400;
     }
 
     .star-control {
@@ -723,7 +720,7 @@
         <button class="primary" id="newBookBtn" type="button">新建记录</button>
         <button id="exportBtn" type="button">导出备份</button>
         <button id="importBtn" type="button">导入备份</button>
-        <button id="restoreBtn" type="button">恢复快照</button>
+        <button id="restoreBtn" type="button">撤销删除/导入</button>
         <select class="theme-select" id="themeSelect" aria-label="选择主题色" title="选择主题色">
           <option value="forest">主题：松叶绿</option>
           <option value="coral">主题：珊瑚粉</option>
@@ -773,8 +770,7 @@
         <div class="editor-head">
           <div class="editor-title-row">
             <h2 id="editorHeading">新建记录</h2>
-            <button class="icon-button" id="closeDetailBtn" type="button" title="关闭详情" aria-label="关闭详情">×</button>
-            <button class="danger" id="deleteBtn" type="button">删除</button>
+            <button id="closeDetailBtn" type="button">← 返回书单</button>
           </div>
           <p class="subtitle" id="editorMeta">本地自动保存</p>
           <div class="date-strip" id="dateStrip"></div>
@@ -782,73 +778,61 @@
 
         <form class="editor-body" id="bookForm">
           <div class="manual-form-block">
-            <div class="section-title">
-              <span>基本信息</span>
-              <span class="section-hint">只有小说名必填，其余都可留空</span>
-            </div>
+            <div class="section-title">基本信息</div>
             <div class="field-grid">
               <label>小说名
                 <input id="titleField" name="title" autocomplete="off" required>
               </label>
-              <label>作者（选填）
+              <label>作者
                 <input id="authorField" name="author" autocomplete="off">
               </label>
-              <label>阅读平台（选填）
-                <input id="platformField" name="platform" autocomplete="off" placeholder="晋江 / 番茄 / 起点 / 微信读书">
+              <label>阅读平台
+                <input id="platformField" name="platform" autocomplete="off">
               </label>
-              <label>阅读进度（选填）
-                <input id="progressField" name="progress" autocomplete="off" placeholder="第 38 章 / 已完结 / 等番外">
+              <label>阅读进度
+                <input id="progressField" name="progress" autocomplete="off">
               </label>
-              <label>记录日期（选填）
+              <label>开始阅读
                 <input id="recordedAtField" name="recordedAt" type="date">
+              </label>
+              <label>读完时间
+                <input id="finishedAtField" name="finishedAt" type="date">
               </label>
               <label>状态
                 <select id="statusField" name="status"></select>
               </label>
-              <label>推荐指数（选填）
+              <label>感受
+                <input id="feelingField" name="feeling" autocomplete="off">
+              </label>
+              <label>推荐指数
                 <div class="star-control" id="ratingControl" aria-label="推荐指数"></div>
               </label>
-              <label class="wide">类型 / 标签（选填）
-                <input id="tagsField" name="tags" autocomplete="off" placeholder="现言、穿越、悬疑、女强、轻松">
+              <label class="wide">类型 / 标签
+                <input id="tagsField" name="tags" autocomplete="off">
               </label>
             </div>
 
-            <div class="section-title">
-              <span>主要人物</span>
-              <span class="section-hint">不确定就不填</span>
-            </div>
+            <div class="section-title">主要人物</div>
             <div class="field-grid">
-              <label>男主（选填）
+              <label>男主
                 <input id="maleLeadField" name="maleLead" autocomplete="off">
               </label>
-              <label>女主（选填）
+              <label>女主
                 <input id="femaleLeadField" name="femaleLead" autocomplete="off">
               </label>
             </div>
 
-            <div class="section-title">
-              <span>故事内容</span>
-              <span class="section-hint">原文和自己的概括分开记录</span>
-            </div>
-            <label>原文简介 / 文案（选填）
-              <textarea id="summaryField" name="summary" placeholder="可以粘贴官方简介或作者文案"></textarea>
-            </label>
-            <label>我的故事梗概（选填）
-              <textarea id="plotField" name="plot" placeholder="用自己的话写主线、设定或核心冲突"></textarea>
+            <div class="section-title">故事内容</div>
+            <label>我认为的故事情节
+              <textarea id="plotField" name="plot"></textarea>
             </label>
 
-            <div class="section-title">
-              <span>我的阅读记录</span>
-              <span class="section-hint">想写多少写多少</span>
-            </div>
-            <label>整体感受（选填）
-              <textarea id="feelingField" name="feeling" placeholder="好看在哪里、不喜欢哪里，或当时的心情"></textarea>
+            <div class="section-title">我的阅读记录</div>
+            <label>印象深刻的情节
+              <textarea id="sceneField" name="scene"></textarea>
             </label>
-            <label>印象深刻的情节（选填）
-              <textarea id="sceneField" name="scene" placeholder="让你记住的片段、人物或转折"></textarea>
-            </label>
-            <label>一句话推荐 / 避雷（选填）
-              <textarea id="recommendationField" name="recommendation" placeholder="以后再看到这本书时，最想提醒自己的一句话"></textarea>
+            <label>一句话推荐 / 避雷
+              <textarea id="recommendationField" name="recommendation"></textarea>
             </label>
           </div>
         </form>
@@ -856,6 +840,7 @@
         <div class="footer">
           <span class="save-state" id="saveState">已自动保存</span>
           <div class="footer-actions">
+            <button class="danger" id="deleteBtn" type="button">删除记录</button>
             <button id="duplicateBtn" type="button">复制一条</button>
             <button class="primary" id="saveBtn" type="submit" form="bookForm">确认保存</button>
           </div>
@@ -910,12 +895,12 @@
       platformField: document.getElementById("platformField"),
       progressField: document.getElementById("progressField"),
       recordedAtField: document.getElementById("recordedAtField"),
+      finishedAtField: document.getElementById("finishedAtField"),
       statusField: document.getElementById("statusField"),
       tagsField: document.getElementById("tagsField"),
       maleLeadField: document.getElementById("maleLeadField"),
       femaleLeadField: document.getElementById("femaleLeadField"),
       plotField: document.getElementById("plotField"),
-      summaryField: document.getElementById("summaryField"),
       feelingField: document.getElementById("feelingField"),
       sceneField: document.getElementById("sceneField"),
       recommendationField: document.getElementById("recommendationField"),
@@ -951,6 +936,7 @@
         createdAt: timestamp,
         updatedAt: timestamp,
         recordedAt: timestamp,
+        finishedAt: "",
         ...overrides
       };
     }
@@ -1005,6 +991,13 @@
       return date.toISOString().slice(0, 10);
     }
 
+    function optionalDateInputValue(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toISOString().slice(0, 10);
+    }
+
     function isoFromDateInput(value, fallback = nowIso()) {
       if (!value) return fallback;
       const date = new Date(`${value}T12:00:00`);
@@ -1024,13 +1017,19 @@
 
     function normalizeBook(book) {
       const base = createBook();
+      const storyParts = [book.plot, book.summary]
+        .map((value) => String(value || "").trim())
+        .filter((value, index, array) => value && array.indexOf(value) === index);
       return {
         ...base,
         ...book,
         tags: Array.isArray(book.tags) ? book.tags : parseTags(book.tags),
         rating: Math.max(0, Math.min(5, Number(book.rating) || 0)),
         status: STATUSES.includes(book.status) ? book.status : "想看",
-        recordedAt: book.recordedAt || book.createdAt || base.recordedAt
+        recordedAt: book.recordedAt || book.createdAt || base.recordedAt,
+        finishedAt: book.finishedAt || "",
+        summary: "",
+        plot: storyParts.join("\n\n")
       };
     }
 
@@ -1131,14 +1130,12 @@
       const reading = state.books.filter((book) => book.status === "在看" || book.status === "追更").length;
       const done = state.books.filter((book) => book.status === "已读完").length;
       const lastExportAt = localStorage.getItem(LAST_EXPORT_KEY);
-      const snapshot = readSafetySnapshot();
       el.statsRow.innerHTML = `
         <span class="pill">总计 ${total} 本</span>
         <span class="pill">在看/追更 ${reading} 本</span>
         <span class="pill">已读完 ${done} 本</span>
         <span class="pill">当前显示 ${list.length} 本</span>
         <span class="pill">${lastExportAt ? `上次备份 ${escapeHtml(shortDateTime(lastExportAt))}` : "建议定期导出备份"}</span>
-        ${snapshot ? `<span class="pill">快照 ${escapeHtml(shortDateTime(snapshot.createdAt))}</span>` : ""}
       `;
     }
 
@@ -1253,20 +1250,20 @@
       el.editorHeading.textContent = book.title || "未命名小说";
       el.editorMeta.textContent = `创建：${fullDate(book.createdAt)} · 更新：${fullDate(book.updatedAt)}`;
       el.dateStrip.innerHTML = `
-        <span class="date-chip">添加：${escapeHtml(formatDate(book.createdAt))}</span>
-        <span class="date-chip">记录：${escapeHtml(formatDate(book.recordedAt))}</span>
-        <span class="date-chip">更新：${escapeHtml(formatDate(book.updatedAt))}</span>
+        <span class="date-chip">开始阅读：${escapeHtml(formatDate(book.recordedAt))}</span>
+        ${book.finishedAt ? `<span class="date-chip">读完：${escapeHtml(formatDate(book.finishedAt))}</span>` : ""}
+        <span class="date-chip">修改：${escapeHtml(formatDate(book.updatedAt))}</span>
       `;
       el.titleField.value = book.title || "";
       el.authorField.value = book.author || "";
       el.platformField.value = book.platform || "";
       el.progressField.value = book.progress || "";
       el.recordedAtField.value = dateInputValue(book.recordedAt || book.createdAt);
+      el.finishedAtField.value = optionalDateInputValue(book.finishedAt);
       el.statusField.value = book.status || "想看";
       el.tagsField.value = book.tags.join("、");
       el.maleLeadField.value = book.maleLead || "";
       el.femaleLeadField.value = book.femaleLead || "";
-      el.summaryField.value = book.summary || "";
       el.plotField.value = book.plot || "";
       el.feelingField.value = book.feeling || "";
       el.sceneField.value = book.scene || "";
@@ -1295,12 +1292,12 @@
         platform: el.platformField.value.trim(),
         progress: el.progressField.value.trim(),
         recordedAt: isoFromDateInput(el.recordedAtField.value, book.recordedAt || book.createdAt || nowIso()),
+        finishedAt: el.finishedAtField.value ? isoFromDateInput(el.finishedAtField.value, "") : "",
         status: el.statusField.value,
         rating: state.ratingDraft,
         tags: parseTags(el.tagsField.value),
         maleLead: el.maleLeadField.value.trim(),
         femaleLead: el.femaleLeadField.value.trim(),
-        summary: el.summaryField.value.trim(),
         plot: el.plotField.value.trim(),
         feeling: el.feelingField.value.trim(),
         scene: el.sceneField.value.trim(),
@@ -1320,12 +1317,12 @@
         book.platform !== draft.platform ||
         book.progress !== draft.progress ||
         dateInputValue(book.recordedAt) !== dateInputValue(draft.recordedAt) ||
+        optionalDateInputValue(book.finishedAt) !== optionalDateInputValue(draft.finishedAt) ||
         book.status !== draft.status ||
         Number(book.rating || 0) !== Number(draft.rating || 0) ||
         !sameTags(book.tags, draft.tags) ||
         book.maleLead !== draft.maleLead ||
         book.femaleLead !== draft.femaleLead ||
-        book.summary !== draft.summary ||
         book.plot !== draft.plot ||
         book.feeling !== draft.feeling ||
         book.scene !== draft.scene ||
@@ -1336,9 +1333,9 @@
       el.editorHeading.textContent = book.title || "未命名小说";
       el.editorMeta.textContent = `创建：${fullDate(book.createdAt)} · 更新：${fullDate(book.updatedAt)}`;
       el.dateStrip.innerHTML = `
-        <span class="date-chip">添加：${escapeHtml(formatDate(book.createdAt))}</span>
-        <span class="date-chip">记录：${escapeHtml(formatDate(book.recordedAt))}</span>
-        <span class="date-chip">更新：${escapeHtml(formatDate(book.updatedAt))}</span>
+        <span class="date-chip">开始阅读：${escapeHtml(formatDate(book.recordedAt))}</span>
+        ${book.finishedAt ? `<span class="date-chip">读完：${escapeHtml(formatDate(book.finishedAt))}</span>` : ""}
+        <span class="date-chip">修改：${escapeHtml(formatDate(book.updatedAt))}</span>
       `;
     }
 
@@ -1381,7 +1378,7 @@
       state.selectedId = null;
       persist();
       renderAll();
-      setSaveState("已删除，可恢复快照", "confirmed");
+      setSaveState("已删除，可在顶部撤销", "confirmed");
     }
 
     function duplicateSelected() {
@@ -1440,17 +1437,19 @@
     function restoreSafetySnapshot() {
       const snapshot = readSafetySnapshot();
       if (!snapshot) {
-        alert("还没有可恢复的本地快照。删除或导入前会自动生成快照。");
+        alert("目前没有可以撤销的删除或导入操作。");
         return;
       }
       const time = shortDateTime(snapshot.createdAt);
-      if (!confirm(`恢复 ${time} 的本地快照？当前内容会先保存成新的快照。`)) return;
+      const action = snapshot.reason === "delete" ? "删除" : snapshot.reason === "import" ? "导入" : "上一次操作";
+      if (!confirm(`撤销 ${time} 的${action}？`)) return;
       captureSafetySnapshot("restore-current");
       state.books = snapshot.books.map(normalizeBook);
       state.selectedId = null;
       persist();
       renderAll();
-      setSaveState("已恢复快照", "confirmed");
+      setSaveState("已撤销上一次操作", "confirmed");
+      showToast("已撤销上一次删除或导入。");
     }
 
     function bindEvents() {

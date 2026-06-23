@@ -225,6 +225,7 @@
       display: grid;
       grid-template-columns: minmax(460px, 1.15fr) minmax(360px, 0.85fr);
       gap: 16px;
+      align-items: start;
       padding: 16px 20px 22px;
       min-height: 0;
     }
@@ -445,13 +446,21 @@
     .editor {
       display: grid;
       grid-template-rows: auto 1fr auto;
-      min-height: calc(100vh - 118px);
+      position: sticky;
+      top: 96px;
+      height: calc(100vh - 116px);
+      min-height: 520px;
+      max-height: 860px;
+      border: 2px solid var(--line-strong);
+      border-left: 4px solid var(--green);
+      box-shadow: 0 12px 30px rgba(31, 48, 39, 0.13);
       overflow: hidden;
     }
 
     .editor-head {
       padding: 15px 16px;
       border-bottom: 1px solid var(--line);
+      background: var(--paper-2);
       display: grid;
       gap: 10px;
     }
@@ -472,6 +481,7 @@
 
     .editor-body {
       overflow: auto;
+      scrollbar-gutter: stable;
       padding: 14px;
       display: grid;
       gap: 12px;
@@ -546,7 +556,7 @@
       gap: 8px;
       justify-content: space-between;
       align-items: center;
-      background: #f7faf7;
+      background: var(--paper-2);
     }
 
     .save-state {
@@ -635,7 +645,15 @@
       }
 
       .editor {
+        position: static;
+        top: auto;
+        height: auto;
         max-height: none;
+        grid-template-rows: auto auto auto;
+      }
+
+      .editor-body {
+        overflow: visible;
       }
     }
 

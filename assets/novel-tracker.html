@@ -307,6 +307,39 @@
       white-space: nowrap;
     }
 
+    .view-switch {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      padding: 3px;
+      gap: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper-2);
+    }
+
+    .view-switch button {
+      min-height: 30px;
+      border: 0;
+      border-radius: 999px;
+      padding: 5px 11px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .view-switch button:hover {
+      background: color-mix(in srgb, var(--green-soft) 70%, #fff);
+      color: var(--green);
+    }
+
+    .view-switch button.active {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--green) 22%, transparent);
+    }
+
     .book-list {
       min-height: 0;
       overflow: auto;
@@ -353,6 +386,113 @@
     .book-row.active {
       background: var(--green-soft);
       box-shadow: inset 3px 0 0 var(--green);
+    }
+
+    .book-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .book-card {
+      width: 100%;
+      min-height: 168px;
+      display: grid;
+      align-content: space-between;
+      gap: 12px;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--green-soft) 76%, #fff) 0%, #fff 56%),
+        var(--paper);
+      padding: 13px;
+      box-shadow: 0 8px 20px rgba(40, 70, 110, 0.07);
+    }
+
+    .book-card:hover {
+      border-color: color-mix(in srgb, var(--green) 46%, var(--line));
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--green-soft) 90%, #fff) 0%, #fff 62%),
+        var(--paper);
+      transform: translateY(-1px);
+    }
+
+    .book-card.active {
+      border-color: var(--green);
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--green) 16%, transparent), inset 0 0 0 1px var(--green);
+    }
+
+    .card-top,
+    .card-bottom {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .card-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .book-table-wrap {
+      padding: 0;
+      overflow: auto;
+    }
+
+    .book-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 880px;
+      font-size: 13px;
+    }
+
+    .book-table th,
+    .book-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .book-table th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: var(--paper-2);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 720;
+      white-space: nowrap;
+    }
+
+    .book-table tbody tr {
+      cursor: pointer;
+    }
+
+    .book-table tbody tr:hover {
+      background: var(--paper-2);
+    }
+
+    .book-table tbody tr.active {
+      background: var(--green-soft);
+      box-shadow: inset 3px 0 0 var(--green);
+    }
+
+    .table-title {
+      min-width: 190px;
+      font-weight: 720;
+      color: var(--ink);
+    }
+
+    .table-note {
+      min-width: 240px;
+      max-width: 360px;
+      color: var(--muted);
     }
 
     .book-main {
@@ -727,7 +867,8 @@
         display: none;
       }
 
-      .book-row {
+      .book-row,
+      .book-card {
         grid-template-columns: 1fr;
         gap: 8px;
         align-items: start;
@@ -741,6 +882,14 @@
       .book-meta,
       .book-note {
         white-space: normal;
+      }
+
+      .view-switch {
+        width: 100%;
+      }
+
+      .view-switch button {
+        flex: 1 1 0;
       }
 
       .toast {
@@ -808,6 +957,11 @@
             </select>
           </div>
           <div class="stats-row" id="statsRow"></div>
+          <div class="view-switch" id="viewSwitch" role="group" aria-label="切换书单视图">
+            <button class="active" type="button" data-view-mode="card">卡片</button>
+            <button type="button" data-view-mode="list">列表</button>
+            <button type="button" data-view-mode="table">表格</button>
+          </div>
         </div>
         <div class="book-list">
           <div class="list-head" aria-hidden="true">
@@ -908,9 +1062,11 @@
     const LAST_EXPORT_KEY = "offline.novelTracker.lastExportAt.v1";
     const THEME_KEY = "offline.novelTracker.theme.v1";
     const STYLE_KEY = "offline.novelTracker.style.v1";
+    const VIEW_KEY = "offline.novelTracker.view.v1";
     const STATUSES = ["想看", "在看", "追更", "已读完", "弃文"];
     const state = {
       books: [],
+      viewMode: localStorage.getItem(VIEW_KEY) || "card",
       selectedId: null,
       query: "",
       status: "",
@@ -937,6 +1093,7 @@
       tagFilter: document.getElementById("tagFilter"),
       sortSelect: document.getElementById("sortSelect"),
       statsRow: document.getElementById("statsRow"),
+      viewSwitch: document.getElementById("viewSwitch"),
       bookRows: document.getElementById("bookRows"),
       editorHeading: document.getElementById("editorHeading"),
       editorMeta: document.getElementById("editorMeta"),
@@ -1219,15 +1376,87 @@
       `;
     }
 
+    function renderCard(book) {
+      const tags = book.tags.slice(0, 5).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+      const moreTags = book.tags.length > 5 ? `<span class="tag">+${book.tags.length - 5}</span>` : "";
+      const note = book.feeling || book.scene || book.plot || "还没有写阅读记录";
+      const meta = [book.author, book.platform, book.progress].filter(Boolean).join(" · ") || "未填写作者/平台";
+      return `
+        <button class="book-card ${book.id === state.selectedId ? "active" : ""}" type="button" data-id="${escapeHtml(book.id)}">
+          <span class="card-top">
+            <span class="card-line">
+              <span class="status status-${escapeHtml(book.status)}">${escapeHtml(book.status)}</span>
+              <span class="book-meta">${escapeHtml(formatDate(book.updatedAt))}</span>
+            </span>
+            <span class="book-title">${escapeHtml(book.title || "未命名小说")}</span>
+            <span class="book-meta">${escapeHtml(meta)}</span>
+            <span class="book-note">${escapeHtml(note)}</span>
+          </span>
+          <span class="card-bottom">
+            <span class="tag-cloud">${tags}${moreTags}</span>
+            <span class="rating">${renderStars(book.rating)}</span>
+          </span>
+        </button>
+      `;
+    }
+
+    function renderTable(list) {
+      const rows = list.map((book) => {
+        const tags = book.tags.slice(0, 4).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+        const note = book.feeling || book.scene || book.plot || "";
+        return `
+          <tr class="${book.id === state.selectedId ? "active" : ""}" data-id="${escapeHtml(book.id)}">
+            <td class="table-title">${escapeHtml(book.title || "未命名小说")}</td>
+            <td>${escapeHtml(book.author || "未记录")}</td>
+            <td>${escapeHtml(book.platform || "未记录")}</td>
+            <td>${escapeHtml(book.progress || "未记录")}</td>
+            <td><span class="status status-${escapeHtml(book.status)}">${escapeHtml(book.status)}</span></td>
+            <td><span class="rating">${renderStars(book.rating)}</span></td>
+            <td>${tags || '<span class="book-meta">未打标签</span>'}</td>
+            <td class="table-note">${escapeHtml(note || "还没有写阅读记录")}</td>
+            <td>${escapeHtml(formatDate(book.updatedAt))}</td>
+          </tr>
+        `;
+      }).join("");
+      return `
+        <div class="book-table-wrap">
+          <table class="book-table">
+            <thead>
+              <tr>
+                <th>小说名</th>
+                <th>作者</th>
+                <th>平台</th>
+                <th>进度</th>
+                <th>状态</th>
+                <th>推荐</th>
+                <th>标签</th>
+                <th>阅读记录</th>
+                <th>更新</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
     function updateSelectedRowInPlace(book) {
-      const row = el.bookRows.querySelector(`.book-row[data-id="${CSS.escape(book.id)}"]`);
-      if (row) row.innerHTML = renderRowContent(book);
+      const row = el.bookRows.querySelector(`[data-id="${CSS.escape(book.id)}"]`);
+      if (row && state.viewMode === "list") row.innerHTML = renderRowContent(book);
+      else renderRows();
       renderStats(filteredBooks());
     }
 
     function renderRows() {
       const list = filteredBooks();
       renderStats(list);
+      state.viewMode = ["card", "list", "table"].includes(state.viewMode) ? state.viewMode : "card";
+      el.viewSwitch.querySelectorAll("[data-view-mode]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.viewMode === state.viewMode);
+      });
+      el.bookRows.className = state.viewMode === "card" ? "book-cards" : "";
+      const listHead = document.querySelector(".list-head");
+      if (listHead) listHead.hidden = state.viewMode !== "list";
       if (!list.length) {
         el.bookRows.innerHTML = state.books.length
           ? '<div class="empty">没有匹配记录。</div>'
@@ -1235,7 +1464,13 @@
         return;
       }
 
-      el.bookRows.innerHTML = list.map(renderRow).join("");
+      if (state.viewMode === "table") {
+        el.bookRows.innerHTML = renderTable(list);
+      } else if (state.viewMode === "card") {
+        el.bookRows.innerHTML = list.map(renderCard).join("");
+      } else {
+        el.bookRows.innerHTML = list.map(renderRow).join("");
+      }
     }
 
     function renderStars(rating) {
@@ -1558,8 +1793,16 @@
         showToast(`已切换风格：${label}。`);
       });
 
+      el.viewSwitch.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-view-mode]");
+        if (!button) return;
+        state.viewMode = ["card", "list", "table"].includes(button.dataset.viewMode) ? button.dataset.viewMode : "card";
+        localStorage.setItem(VIEW_KEY, state.viewMode);
+        renderRows();
+      });
+
       el.bookRows.addEventListener("click", (event) => {
-        const row = event.target.closest(".book-row");
+        const row = event.target.closest("[data-id]");
         if (!row) return;
         event.preventDefault();
         if (event.detail > 1 || state.selectedId === row.dataset.id) return;
